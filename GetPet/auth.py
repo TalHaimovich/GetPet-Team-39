@@ -33,8 +33,35 @@ def registeruser():
 
     return render_template("registeruser.html")
 @auth.route('/reg_asos',methods=['GET','POST'])
+
+
+@auth.route('/reg_asos',methods=['GET','POST'])
 def reg_asos():
+
+    email = request.form.get('email')
+    password1 = request.form.get('psw')
+    password2 = request.form.get('psw-repeat')
+    name = request.form.get('name')
+    adress = request.form.get('adress')
+    user = BusinessUser.query.filter_by(email=email).first()
+    user1 = User.query.filter_by(email=email).first()
+    user2 = BusinessUser.query.filter_by(email=email).first()
+    user3 = AssociationUser.query.filter_by(email=email).first()
+    if user1 or user2 or user3:
+        # user exists
+        return render_template("reg_asos.html", exists=True)
+    if password1!=password2:
+        flag=False
+        return render_template("register.html")
+
+
+    if request.method == 'POST' and email and password1:
+        new_user = AssociationUser(email=email, password=password1, name=name, adress=adress)
+        db.session.add(new_user)
+        db.session.commit()
+
     return render_template("reg_asos.html")
+
 
 @auth.route('/registerbussines',methods=['GET','POST'])
 def registerbussines():
