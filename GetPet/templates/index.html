@@ -44,15 +44,21 @@
 
             <div class="banner_form">
                 <h1>מה ניש, צריך להתחבר לפני</h1>
-                <form class="ConnectIndex" action="login" method="post">
-                    <label for="input">שם פרטי<input type="firstname"></label>
-                    <label for="input">שם משפחה<input type="password"></label>
+                    <form class="ConnectIndex" action="login" method="POST">
+                    <label for="email"><b>אימייל</b></label>
+                    <input type="text" placeholder="הכנס אימייל" name="email" id="email" required>  
+          
+        
+                    
+                    <label for="psw"><b>סיסמה</b></label>
+                    <input type="password" placeholder="הכנס סיסמה" name="psw" id="psw" required> 
                     <button type="submit"><a href="login.html"></a>שלח אותי ></button>
                     
             
                 </form>
                 <form class="ConnectIndex" action="register" method=post>
-                    <h5>עדיין לא רשום?! להרשמה לחץ כאן</h5>
+                    <br>
+                    <p>עדיין לא רשום?! להרשמה לחץ כאן</p>
 
                     <button type="submit">אני חדש ></button>
                 </form>
