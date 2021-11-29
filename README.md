@@ -10,6 +10,7 @@ Html, css, JS, FLASK, Python, SQLlite, SQLAlchemy
 
 Setup & Installtion:
 Make sure you have the latest version of Python installed.
+Make sure you have the latest version of Visual Studio Code.
 
 requried:
 flask-login
