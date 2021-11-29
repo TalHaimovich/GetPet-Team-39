@@ -11,6 +11,11 @@ Html, css, JS, FLASK, Python, SQLlite, SQLAlchemy
 Setup & Installtion:
 Make sure you have the latest version of Python installed.
 Make sure you have the latest version of Visual Studio Code.
+for the unittest:
+through the terminal write the comends
+python -m pip install pytest –verbose
+python -m pytest
+
 
 requried:
 flask-login
