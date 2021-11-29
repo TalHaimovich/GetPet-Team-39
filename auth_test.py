@@ -3,15 +3,47 @@ from GetPet import create_app
 from GetPet.models import User,BusinessUser,AssociationUser
 from GetPet.auth import register
 from GetPet.auth import login
-import unittest
+import unittest, pytest
 from flask import render_template,Flask
 from urllib.parse import urlparse,ParseResult
 
 
+#route testing usin pytest
+@pytest.fixture
+def client():
+    app = create_app()
+    app.config["TESTING"] = True
+    with app.test_client() as client:
+        yield client
 
+def test_login(client):
+    rv = client.get("/login")
+    assert rv.status_code == 200        
+
+def test_registeruser(client):
+    rv = client.get("/registeruser")
+    assert rv.status_code == 200        
+
+def test_reg_asos(client):
+    rv = client.get("/reg_asos")
+    assert rv.status_code == 200     
+
+def test_registerbussines(client):
+    rv = client.get("/registerbussines")
+    assert rv.status_code == 200     
+
+def test_register(client):
+    rv = client.get("/register")
+    assert rv.status_code == 200    
+
+def test_logout(client):
+    rv = client.get("/logout")
+    assert rv.status_code == 200        
+
+      
+#users testing-using unittest
 class test_auth(unittest.TestCase):
     app=create_app()
-    
     def create_app(self):
         app=Flask(__name__)
         app.config['TESTING']=True
