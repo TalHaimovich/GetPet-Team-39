@@ -51,6 +51,7 @@ def registeruser():
         new_user = User(email=email, password=password1)
         db.session.add(new_user)
         db.session.commit()
+        return render_template("index.html")
 
     return render_template("registeruser.html")
 
@@ -78,6 +79,7 @@ def reg_asos():
         new_user = AssociationUser(email=email, password=password1, name=name, adress=adress)
         db.session.add(new_user)
         db.session.commit()
+        return render_template("index.html")
 
     return render_template("reg_asos.html")
 
@@ -104,6 +106,7 @@ def registerbussines():
         new_user = BusinessUser(email=email, password=password1, name=name, CompanyID=CompanyID)
         db.session.add(new_user)
         db.session.commit()
+        return render_template("index.html")
 
     return render_template("registerbussines.html")
 
