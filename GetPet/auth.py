@@ -10,6 +10,15 @@ from .models import User
 
 auth = Blueprint('auth', __name__)
 
+@auth.route('/css/<path:path>')
+def serve_css(path):
+    return send_from_directory('css', path)
+
+
+@auth.route('/images/<path:path>')
+def serve_images(path):
+    return send_from_directory('images', path)
+
 
 @auth.route('/registeruser',methods=['GET','POST'])
 def registeruser():
@@ -65,6 +74,28 @@ def reg_asos():
 
 @auth.route('/registerbussines',methods=['GET','POST'])
 def registerbussines():
+    email = request.form.get('email')
+    password1 = request.form.get('psw')
+    password2 = request.form.get('psw-repeat')
+    name = request.form.get('BN')
+    CompanyID = request.form.get('bid')
+    user = BusinessUser.query.filter_by(email=email).first()
+    user1 = User.query.filter_by(email=email).first()
+    user2 = BusinessUser.query.filter_by(email=email).first()
+    user3 = AssociationUser.query.filter_by(email=email).first()
+    if user1 or user2 or user3:
+        # user exists
+        return render_template("registerbussines.html", exists=True)
+    if password1!=password2:
+        flag=False
+        return render_template("register.html")
+
+
+    if request.method == 'POST' and email and password1:
+        new_user = BusinessUser(email=email, password=password1, name=name, CompanyID=CompanyID)
+        db.session.add(new_user)
+        db.session.commit()
+
     return render_template("registerbussines.html")
 
 @auth.route('/register',methods=['GET','POST'])
