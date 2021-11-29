@@ -1,14 +1,12 @@
-from werkzeug.wrappers import response
 from GetPet import create_app
 from GetPet.models import User,BusinessUser,AssociationUser
-from GetPet.auth import register
-from GetPet.auth import login
 import unittest, pytest
-from flask import render_template,Flask
-from urllib.parse import urlparse,ParseResult
+from flask import Flask
 
 
-#route testing usin pytest
+
+#route testing using pytest, for actrivation enter the folowing line on terminal " python -m pytest"
+#you need to have pytest installed by folowing line on terminal "python -m pip install pytest --verbose"
 @pytest.fixture
 def client():
     app = create_app()
@@ -40,8 +38,10 @@ def test_logout(client):
     rv = client.get("/logout")
     assert rv.status_code == 200        
 
-      
-#users testing-using unittest
+
+
+
+#users testing-using unittest,for activation run that file
 class test_auth(unittest.TestCase):
     app=create_app()
     def create_app(self):
