@@ -10,6 +10,8 @@ from .models import User
 
 auth = Blueprint('auth', __name__)
 
+
+
 @auth.route('/css/<path:path>')
 def serve_css(path):
     return send_from_directory('css', path)
@@ -19,6 +21,16 @@ def serve_css(path):
 def serve_images(path):
     return send_from_directory('images', path)
 
+@auth.route('/login',methods=['GET','POST'])
+def login():
+    email1 = request.form.get('email')
+    password1 = request.form.get('psw')
+    user1 = User.query.filter_by(email=email1).first()
+    user2 = BusinessUser.query.filter_by(email=email1).first()
+    user3= AssociationUser.query.filter_by(email=email1).first()
+    if (user1 and user1.password == password1) or (user2 and user2.password == password1) or (user3 and user3.password==password1):
+        return render_template("login.html")
+    return render_template("index.html")
 
 @auth.route('/registeruser',methods=['GET','POST'])
 def registeruser():
@@ -41,8 +53,6 @@ def registeruser():
         db.session.commit()
 
     return render_template("registeruser.html")
-@auth.route('/reg_asos',methods=['GET','POST'])
-
 
 @auth.route('/reg_asos',methods=['GET','POST'])
 def reg_asos():
@@ -70,7 +80,6 @@ def reg_asos():
         db.session.commit()
 
     return render_template("reg_asos.html")
-
 
 @auth.route('/registerbussines',methods=['GET','POST'])
 def registerbussines():
