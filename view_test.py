@@ -4,9 +4,8 @@ import unittest
 import pytest,json
 
 
-
-
-
+#route testing using pytest, for actrivation enter the folowing line on terminal " python -m pytest"
+#you need to have pytest installed by folowing line on terminal "python -m pip install pytest --verbose"
 @pytest.fixture
 def client():
     app = create_app()
