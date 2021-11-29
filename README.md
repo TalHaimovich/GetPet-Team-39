@@ -16,6 +16,7 @@ flask-login
 flask-sqlalchemy
 sqlite3
 flask-test
+pytest
 
 running the app:
 python main.py
