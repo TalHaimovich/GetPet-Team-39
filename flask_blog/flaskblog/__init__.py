@@ -14,5 +14,10 @@ login_manager = LoginManager(app)
 with app.app_context():
     from .models import User, Post
     db.create_all()
+    if User.query.filter_by(email="admin@admin.com").count() == 0:
+        hashed_password = bcrypt.generate_password_hash('admin').decode('utf-8')
+        default_user = User(name='admin', email="admin@admin.com", password=hashed_password, is_admin=True)
+        db.session.add(default_user)
+        db.session.commit()
 
 from flaskblog import routes
