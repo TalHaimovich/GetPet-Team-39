@@ -142,7 +142,24 @@
                                     {{ form.image(class="form-control form-control-lg") }}
                                 {% endif %}
                             </div>
+<<<<<<< HEAD
                            
+=======
+                            <div class="form-group" style="display: none">
+                                {{ form.type.label(class="form-control-label") }}
+
+                                {% if form.type.errors %}
+                                    {{ form.type(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.type.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.type(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+>>>>>>> 292ae86b4044ff95d78f76549e311f1626f4731b
                             <div class="form-group">
                                 {{ form.price.label(class="form-control-label") }}
 
@@ -157,6 +174,7 @@
                                     {{ form.price(class="form-control form-control-lg") }}
                                 {% endif %}
                             </div>
+<<<<<<< HEAD
 
                             
                             <div class="form-group">
@@ -175,6 +193,8 @@
                             </div>
 
                             
+=======
+>>>>>>> 292ae86b4044ff95d78f76549e311f1626f4731b
                         </fieldset>
                         {{ form.submit(class="btn btn-outline-info") }}
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -201,6 +221,7 @@
                 <a class="nav-link" id="product-posts-tab" data-toggle="pill" href="#product-posts" role="tab"
                    aria-controls="product-posts" aria-selected="false">Products</a>
             </li>
+<<<<<<< HEAD
             <li class="nav-item" role="presentation">
                 <a class="nav-link" id="discount-posts-tab" data-toggle="pill" href="#discount-posts" role="tab"
                    aria-controls="discount-posts" aria-selected="false">Discount</a>
@@ -208,6 +229,8 @@
 
 
 
+=======
+>>>>>>> 292ae86b4044ff95d78f76549e311f1626f4731b
         </ul>
         <div class="tab-content" id="pills-tabContent">
             <div class="tab-pane fade show active" id="all-posts" role="tabpanel" aria-labelledby="all-posts-tab">
@@ -246,6 +269,7 @@
                     {% endfor %}
                 </div>
             </div>
+<<<<<<< HEAD
             <div class="tab-pane fade" id="discount-posts" role="tabpanel" aria-labelledby="discount-posts-tab">
                 <div class="row">
                     {% for post in discount_posts %}
@@ -255,6 +279,8 @@
                     {% endfor %}
                 </div>
             </div>
+=======
+>>>>>>> 292ae86b4044ff95d78f76549e311f1626f4731b
         </div>
     </div>
 {% endblock content %}

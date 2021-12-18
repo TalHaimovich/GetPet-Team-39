@@ -5,9 +5,12 @@
         {% if post.is_product %}
             <p class="card-title">{{ post.price }} ils</p>
         {% endif %}
+<<<<<<< HEAD
         {% if post.is_discount %}
             <p class="card-title", style="background-color: crimson",>{{ post.price }} ils</p>
         {% endif %}
+=======
+>>>>>>> 292ae86b4044ff95d78f76549e311f1626f4731b
         <p class="card-text">{{ post.content }}</p>
         <p class="card-text">posted by - {{ post.user.name }}</p>
         <p class="card-text"><small class="text-muted">{{ post.date_posted }}</small></p>
