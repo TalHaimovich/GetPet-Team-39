@@ -1,0 +1,120 @@
+from flask import render_template, url_for, flash, redirect, send_from_directory
+from flaskblog import app, db, bcrypt
+from flaskblog.forms import RegistrationForm, LoginForm, AsosRegistrationForm, BusRegistrationForm
+from flaskblog.models import User, Post
+from flask_login import login_user, current_user, logout_user
+
+posts = [
+    {
+        'author': 'Corey Schafer',
+        'title': 'Blog Post 1',
+        'content': 'First post content',
+        'date_posted': 'April 20, 2018'
+    },
+    {
+        'author': 'Jane Doe',
+        'title': 'Blog Post 2',
+        'content': 'Second post content',
+        'date_posted': 'April 21, 2018'
+    }
+]
+
+
+@app.route('/images/<path:path>')
+def serve_images(path):
+    return send_from_directory('images', path)
+
+
+@app.route("/")
+@app.route("/home")
+def home():
+    return render_template('home.html', posts=posts)
+
+
+@app.route("/about")
+def about():
+    return render_template('about.html', title='About')
+
+
+@app.route("/register")
+def register():
+    return render_template('register.html', title='Register')
+
+
+@app.route("/registeruser", methods=['GET', 'POST'])
+def registeruser():
+    if current_user.is_authenticated:
+        return redirect(url_for('homelogged'))
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = User(name=form.name.data, email=form.email.data, password=hashed_password)
+        db.session.add(user)
+        db.session.commit()
+        flash(f'Your account have been created! You are now able to log in', 'success')
+        return redirect(url_for('login'))
+    return render_template('registeruser.html', title='RegisterUser', form=form)
+
+
+@app.route("/registerbus", methods=['GET', 'POST'])
+def registerbus():
+    if current_user.is_authenticated:
+        return redirect(url_for('homelogged'))
+    form = BusRegistrationForm()
+
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = User(name=form.name.data, email=form.email.data, password=hashed_password, bus_id=form.bus_id.data, is_bus=True)
+        db.session.add(user)
+        db.session.commit()
+        flash(f'Your account have been created! You are now able to log in', 'success')
+        return redirect(url_for('login'))
+
+    return render_template('registerbus.html', title='RegisterBussines', form=form)
+
+
+@app.route("/registerasos", methods=['GET', 'POST'])
+def registerasos():
+    if current_user.is_authenticated:
+        return redirect(url_for('homelogged'))
+    form = AsosRegistrationForm()
+
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = User(name=form.name.data, email=form.email.data, password=hashed_password, address=form.address.data, is_asos=True)
+        db.session.add(user)
+        db.session.commit()
+        flash(f'Your account have been created! You are now able to log in', 'success')
+        return redirect(url_for('login'))
+    return render_template('registerasos.html', title='RegisterAssosition', form=form)
+
+
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('homelogged'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user, remember=form.remember.data)
+            return redirect(url_for('homelogged'))
+        else:
+            flash('Login Unsuccessful. Please check email and password', 'danger')
+    return render_template('login.html', title='Login', form=form)
+
+
+@app.route("/homelogged", methods=['GET', 'POST'])
+def homelogged():
+    return render_template('homelogged.html', title='homelogged', posts=posts)
+
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
+
+@app.route("/account")
+def account():
+    return render_template('account.html', title='account')
