@@ -165,7 +165,8 @@ def homelogged():
         db.session.commit()
 
     return render_template(
-        'homelogged.html', title='homelogged',
+        'homelogged.html',
+        title='homelogged',
         all_posts=Post.query.all(),
         adopt_posts=Post.query.filter_by(is_adopt=True),
         foster_posts=Post.query.filter_by(is_foster=True),
@@ -174,13 +175,13 @@ def homelogged():
     )
 
 
-@app.route("/delete_post/<post_id>", methods=['DELETE'])
+@app.route("/delete_post/<post_id>", methods=['POST'])
 @login_required
 def delete_post(post_id):
-    post = Post.query.filter_by(id=post_id)
+    post = Post.query.get(post_id)
     if post:
         if post.user_id == current_user.id or current_user.is_admin:
-            post.delete()
+            db.session.delete(post)
             db.session.commit()
         else:
             flash(f'You cannot delete this post', 'danger')
