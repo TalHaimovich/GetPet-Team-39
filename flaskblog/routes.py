@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect,send_from_directory
 from flaskblog import app
 from flaskblog.forms import RegistrationForm, LoginForm,RegistrationFormBUS,RegistrationFormAsso
-from flaskblog.models import User, BusUser , AsosUser, Post, BusPost,AsosPost
+from flaskblog.models import User, BusUser , AsosUser, Post
 
 
 posts = [
