@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from flask_wtf.file import FileField, FileAllowed, FileRequired
 from flaskblog.models import User
 
 
@@ -9,6 +10,9 @@ class RegistrationForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     email = StringField('Email', validators=[DataRequired(), Email()])
+    image = FileField('image', validators=[
+        FileAllowed(['jpg', 'png'], 'Images only!')
+    ])
     submit = SubmitField('Sign Up')
 
     def validate_email(self, email):
@@ -32,7 +36,7 @@ class BusRegistrationForm(RegistrationForm):
     bus_id = IntegerField('bus id', validators=[DataRequired()])
 
     def validate_bus_id(self, bus_id):
-        user = User.query.filter_by(address=bus_id.data).first()
+        user = User.query.filter_by(bus_id=bus_id.data).first()
         if user:
             raise ValidationError('That bus id is taken. please choose another')
 
@@ -43,3 +47,14 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')
+
+
+class PostForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired(), Length(min=2, max=20)])
+    content = TextAreaField('Content', validators=[DataRequired(), Length(min=2, max=1000)])
+    image = FileField('image', validators=[
+        FileAllowed(['jpg', 'png'], 'Images only!')
+    ])
+    type = SelectField('Type',  validators=[DataRequired()], choices=['adopt', 'foster'])
+    price = IntegerField('Price')
+    submit = SubmitField('Save')
