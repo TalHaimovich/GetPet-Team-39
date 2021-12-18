@@ -1,6 +1,7 @@
 from flask import render_template, url_for, flash, redirect, send_from_directory
+from werkzeug.wrappers import request
 from flaskblog import app, db, bcrypt
-from flaskblog.forms import RegistrationForm, LoginForm, AsosRegistrationForm, BusRegistrationForm, PostForm
+from flaskblog.forms import RegistrationForm, LoginForm, AsosRegistrationForm, BusRegistrationForm, PostForm,UpdateAccountForm
 from flaskblog.models import User, Post
 from flask_login import login_user, current_user, logout_user, login_required, login_manager
 from werkzeug.utils import secure_filename
@@ -144,13 +145,8 @@ def login():
 def homelogged():
     form = PostForm()
     if current_user.is_bus:
-        form.type.choices = ['product']
-<<<<<<< HEAD
-        form.type.choices = ['discount']
-
-=======
->>>>>>> 292ae86b4044ff95d78f76549e311f1626f4731b
-
+        form.type.choices = ['product','discount']
+        
     if form.validate_on_submit():
         user_id = current_user.id
         f = form.image.data
@@ -162,18 +158,12 @@ def homelogged():
         is_adopt = selected_type == 'adopt'
         is_foster = selected_type == 'foster'
         is_product = selected_type == 'product'
-<<<<<<< HEAD
         is_discount = selected_type == 'discount'
         
 
         post_created = Post(title=form.title.data, content=form.content.data, user_id=user_id, image=filename,
                             is_adopt=is_adopt, is_foster=is_foster, is_product=is_product,is_discount=is_discount,
                              price=form.price.data)
-=======
-
-        post_created = Post(title=form.title.data, content=form.content.data, user_id=user_id, image=filename,
-                            is_adopt=is_adopt, is_foster=is_foster, is_product=is_product, price=form.price.data)
->>>>>>> 292ae86b4044ff95d78f76549e311f1626f4731b
 
         db.session.add(post_created)
         db.session.commit()
@@ -185,10 +175,7 @@ def homelogged():
         adopt_posts=Post.query.filter_by(is_adopt=True),
         foster_posts=Post.query.filter_by(is_foster=True),
         product_posts=Post.query.filter_by(is_product=True),
-<<<<<<< HEAD
         discount_posts=Post.query.filter_by(is_discount=True),
-=======
->>>>>>> 292ae86b4044ff95d78f76549e311f1626f4731b
         form=form
     )
 
@@ -201,10 +188,7 @@ def delete_post(post_id):
         if post.user_id == current_user.id or current_user.is_admin:
             db.session.delete(post)
             db.session.commit()
-<<<<<<< HEAD
             flash(f'Your post has been deleted!', 'success')
-=======
->>>>>>> 292ae86b4044ff95d78f76549e311f1626f4731b
         else:
             flash(f'You cannot delete this post', 'danger')
     else:
@@ -218,6 +202,20 @@ def logout():
     return redirect(url_for('home'))
 
 
-@app.route("/account")
+@app.route("/account", methods=['GET', 'POST'])
 def account():
-    return render_template('account.html', title='account')
+    form=UpdateAccountForm()
+    if form.validate_on_submit():
+        current_user.name=form.name.data
+        current_user.email=form.email.data
+        db.session.commit()
+        flash('Your Account is updated!','success')
+        return redirect (url_for('account'))
+    #elif request.method =='GET':
+     #   form.name.data=current_user.name
+      #  form.email.data=current_user.email
+
+    return render_template(
+        'account.html', title='account',form=form,
+        all_posts=Post.query.filter_by(user_id=current_user.id))
+     

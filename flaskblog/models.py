@@ -38,10 +38,7 @@ class Post(db.Model):
     is_adopt = db.Column(db.Boolean, default=False, nullable=False)
     is_foster = db.Column(db.Boolean, default=False, nullable=False)
     is_product = db.Column(db.Boolean, default=False, nullable=False)
-<<<<<<< HEAD
     is_discount = db.Column(db.Boolean, default=False, nullable=False)
-=======
->>>>>>> 292ae86b4044ff95d78f76549e311f1626f4731b
 
     def __repr__(self):
         return f"Post('{self.title}')"

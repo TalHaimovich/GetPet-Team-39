@@ -3,6 +3,7 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField, Integ
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 from flaskblog.models import User
+from flask_login import current_user
 
 
 class RegistrationForm(FlaskForm):
@@ -58,3 +59,17 @@ class PostForm(FlaskForm):
     type = SelectField('Type',  validators=[DataRequired()], choices=['adopt', 'foster'])
     price = IntegerField('Price')
     submit = SubmitField('Save')
+
+class UpdateAccountForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired(), Length(min=2, max=20)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    image = FileField('image', validators=[
+        FileAllowed(['jpg', 'png'], 'Images only!')
+    ])
+    submit = SubmitField('Update')
+
+    def validate_email(self, email):
+        if email.data!=current_user.email:
+            user = User.query.filter_by(email=email.data).first()
+            if user:
+                raise ValidationError('That email is taken. please choose another')
