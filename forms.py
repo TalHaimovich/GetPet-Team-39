@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, Length, Email, EqualTo
-
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from flaskblog.models import User,BusUser,AsosUser
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username',
@@ -12,6 +12,17 @@ class RegistrationForm(FlaskForm):
     confirm_password = PasswordField('Confirm Password',
                                      validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Sign Up')
+
+    def validate_username(self, username):
+        user= User.query.filter_by(username = username.data).first()
+        if user:
+            raise ValidationError('That username is taken. please choose another')
+    def validate_email(self, email):
+            user= User.query.filter_by(email = email.data).first()
+            if user:
+                raise ValidationError('That email is taken. please choose another')
+
+
 
 class RegistrationFormBUS(FlaskForm):
     bus_name = StringField('שם עסק',
@@ -24,6 +35,16 @@ class RegistrationFormBUS(FlaskForm):
     bus_id=StringField('bus_id',
                         validators=[DataRequired(), Length(min=1,max=20)])
     submit = SubmitField('Sign Up')
+
+    
+    def validate_bus_name(self, bus_name):
+        user= BusUser.query.filter_by(bus_name = bus_name.data).first()
+        if user:
+            raise ValidationError('That username is taken. please choose another')
+    def validate_email(self, email):
+            user= User.query.filter_by(email = email.data).first()
+            if user:
+                raise ValidationError('That email is taken. please choose another')
 
 
 class RegistrationFormAsso(FlaskForm):
@@ -38,7 +59,15 @@ class RegistrationFormAsso(FlaskForm):
                                      validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('הירשם')############
 
-    
+    def validate_asos_name(self, asos_name):
+        user= AsosUser.query.filter_by(asos_name = asos_name.data).first()
+        if user:
+            raise ValidationError('That username is taken. please choose another')
+    def validate_email(self, email):
+            user= User.query.filter_by(email = email.data).first()
+            if user:
+                raise ValidationError('That email is taken. please choose another')
+
 
 
 class LoginForm(FlaskForm):
