@@ -25,7 +25,7 @@ class RegistrationForm(FlaskForm):
 
 
 class RegistrationFormBUS(FlaskForm):
-    bus_name = StringField('שם עסק',
+    username = StringField('שם עסק',
                            validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email',
                         validators=[DataRequired(), Email()])
@@ -37,8 +37,8 @@ class RegistrationFormBUS(FlaskForm):
     submit = SubmitField('Sign Up')
 
     
-    def validate_bus_name(self, bus_name):
-        user= BusUser.query.filter_by(bus_name = bus_name.data).first()
+    def validate_bus_name(self, username):
+        user= BusUser.query.filter_by(username = username.data).first()
         if user:
             raise ValidationError('That username is taken. please choose another')
     def validate_email(self, email):
@@ -48,7 +48,7 @@ class RegistrationFormBUS(FlaskForm):
 
 
 class RegistrationFormAsso(FlaskForm):
-    asos_name = StringField('שם אגודה',
+    username = StringField('שם אגודה',
                            validators=[DataRequired(), Length(min=2, max=20)])
     asos_addres = StringField('כתובת',
                         validators=[DataRequired(), Length(min=2, max=20)])
@@ -59,8 +59,8 @@ class RegistrationFormAsso(FlaskForm):
                                      validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('הירשם')############
 
-    def validate_asos_name(self, asos_name):
-        user= AsosUser.query.filter_by(asos_name = asos_name.data).first()
+    def validate_asos_name(self, username):
+        user= AsosUser.query.filter_by(username = username.data).first()
         if user:
             raise ValidationError('That username is taken. please choose another')
     def validate_email(self, email):

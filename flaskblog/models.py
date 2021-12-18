@@ -37,11 +37,11 @@ class BusUser(db.Model,UserMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship('User', uselist=False)
 
-    bus_name = db.Column(db.String(20),unique=True,nullable=False)
+    
     bus_id = db.Column(db.String(20),unique=True,nullable=False)
 
     def __repr__(self):
-        return f"BusUser('{self.bus_name}','{self.user}')"
+        return f"BusUser('{User.username}','{self.user}')"
 
 
 class AsosUser(db.Model,UserMixin):
@@ -49,12 +49,12 @@ class AsosUser(db.Model,UserMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship('User', uselist=False)
 
-    asos_name = db.Column(db.String(20),unique=True,nullable=False)
+    
     asos_addres = db.Column(db.String(20),unique=True,nullable=False)
     
 
     def __repr__(self):
-        return f"AsosUser('{self.asos_name}','{self.user}')"
+        return f"AsosUser('{User.username}','{self.user}')"
 
 
 class Post(db.Model):

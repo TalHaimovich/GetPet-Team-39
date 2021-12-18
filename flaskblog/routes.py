@@ -57,12 +57,12 @@ def registerbus():
     form = RegistrationFormBUS()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user=BusUser(bus_name=form.bus_name.data,email=form.email.data, password=hashed_password,bus_id=form.bus_id.data)
-        db.session.add(user)
+        user1=User(username=form.username.data,email=form.email.data, password=hashed_password)
+        bususer=BusUser(user=user1,bus_id=form.bus_id.data)
+        db.session.add(bususer)
         db.session.commit()
         flash(f'Your acount have been created! You are now able to log in', 'success')
         return redirect(url_for('login'))
-        #error for exict user
     return render_template('registerbus.html', title='RegisterBussines', form=form)
 
 @app.route("/registerasos", methods=['GET', 'POST'])
@@ -72,8 +72,9 @@ def registerasos():
     form = RegistrationFormAsso()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user=AsosUser(asos_name=form.asos_name.data,email=form.email.data, password=hashed_password,asos_addres=form.asos_addres.data)
-        db.session.add(user)
+        user1=User(username=form.username.data,email=form.email.data, password=hashed_password)
+        asosuser=AsosUser(user=user1,asos_addres=form.asos_addres.data)
+        db.session.add(asosuser)
         db.session.commit()
         flash(f'Your acount have been created! You are now able to log in', 'success')
         return redirect(url_for('login'))
