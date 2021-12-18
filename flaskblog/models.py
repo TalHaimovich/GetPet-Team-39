@@ -1,6 +1,5 @@
 from datetime import datetime
 from flaskblog import db, login_manager
-from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 from flask_login import UserMixin
 
 
@@ -8,81 +7,31 @@ from flask_login import UserMixin
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-class User(db.Model,UserMixin):
-    id = db.Column(db.Integer ,primary_key=True)
-    username = db.Column(db.String(20),unique=True,nullable=False)
-    email = db.Column(db.String(120),unique=True,nullable=False)
-    image_file=db.Column(db.String(20),nullable=False,default='default.jpg')
-    password = db.Column(db.String(60),nullable=False)
+
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), unique=False, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(60), nullable=False)
+    image = db.Column(db.String(20), nullable=False, default='default.jpg')
+    address = db.Column(db.String(100), nullable=True)
+    bus_id = db.Column(db.Integer, nullable=True)
+    is_bus = db.Column(db.Boolean, default=False, nullable=False)  # true if user is business user
+    is_asos = db.Column(db.Boolean, default=False, nullable=False)  # true if user is asos user
+
+    # relationships
     posts = db.relationship('Post', backref='author', lazy=True)
 
-
-    ### For easier access
-    bus_user    = db.relationship('BusUser',  back_populates='user', uselist=False)
-    asos_user   = db.relationship('AsosUser', back_populates='user', uselist=False)
-
-    @hybrid_property
-    def is_bus_user(self):
-        return self.bus_user != None
-
-    @hybrid_property
-    def is_asos_user(self):
-        return self.asos_user != None
-
     def __repr__(self):
-        return f"User('{self.username}','{self.email}','{self.image_file}')"
-
-class BusUser(db.Model,UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    user = db.relationship('User', uselist=False)
-
-    
-    bus_id = db.Column(db.String(20),unique=True,nullable=False)
-
-    def __repr__(self):
-        return f"BusUser('{User.username}','{self.user}')"
-
-
-class AsosUser(db.Model,UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    user = db.relationship('User', uselist=False)
-
-    
-    asos_addres = db.Column(db.String(20),unique=True,nullable=False)
-    
-
-    def __repr__(self):
-        return f"AsosUser('{User.username}','{self.user}')"
+        return f"User('{self.name}','{self.email}')"
 
 
 class Post(db.Model):
-    id = db.Column(db.Integer ,primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     title = db.Column(db.String(100), nullable=False)
-    date_posted= db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    content = db.Column(db.Text , nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'),nullable=False)
-     
+    content = db.Column(db.Text, nullable=False)
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
     def __repr__(self):
-        return f"Post('{self.title}','{self.date_posted}')" 
-
-# class BusPost(db.Model):
-#     id = db.Column(db.Integer ,primary_key=True)
-#     title = db.Column(db.String(100), nullable=False)
-#     date_posted= db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-#     content = db.Column(db.Text , nullable=False)
-#     user_id = db.Column(db.Integer, db.ForeignKey('bus_user.id'),nullable=False)
-     
-#     def __repr__(self):
-#         return f"BusPost('{self.title}','{self.date_posted}')" 
-
-# class AsosPost(db.Model):
-#     id = db.Column(db.Integer ,primary_key=True)
-#     title = db.Column(db.String(100), nullable=False)
-#     date_posted= db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-#     content = db.Column(db.Text , nullable=False)
-#     user_id = db.Column(db.Integer, db.ForeignKey('asos_user.id'),nullable=False)
-     
-#     def __repr__(self):
-#         return f"AsosPost('{self.title}','{self.date_posted}')" 
+        return f"Post('{self.title}')"
