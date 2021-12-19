@@ -212,7 +212,7 @@ def account():
         flash('Your Account is updated!','success')
         return redirect (url_for('account'))
     #elif request.method =='GET':
-     #   aaaaaaaaaaaaaaaaaaaaaaaaaform.name.data=current_user.name
+     #  form.name.data=current_user.name
       #  form.email.data=current_user.email
 
     return render_template(
