@@ -1,5 +1,5 @@
 
-from GetPet import create_app
+from flaskblog import create_app
 import unittest
 import pytest,json
 
