@@ -9,12 +9,6 @@ import uuid
 from flask import Flask, render_template, session
 from flask_login import current_user
 
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> eb2ff8d7f64d17d6c978c00431268d0407104dca
 @app.route('/images/<path:path>')
 def serve_images(path):
     return send_from_directory('images', path)
