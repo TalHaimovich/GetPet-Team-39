@@ -1,5 +1,4 @@
-from flask import render_template, url_for, flash, redirect, send_from_directory
-from werkzeug.wrappers import request
+from flask import render_template, url_for, flash, redirect, send_from_directory, abort, request
 from flaskblog import app, db, bcrypt
 from flaskblog.forms import RegistrationForm, LoginForm, AsosRegistrationForm, BusRegistrationForm, PostForm,UpdateAccountForm
 from flaskblog.models import User, Post
@@ -10,9 +9,12 @@ import uuid
 from flask import Flask, render_template, session
 from flask_login import current_user
 
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> eb2ff8d7f64d17d6c978c00431268d0407104dca
 @app.route('/images/<path:path>')
 def serve_images(path):
     return send_from_directory('images', path)
@@ -133,7 +135,7 @@ def homelogged():
     form = PostForm()
     if current_user.is_bus:
         form.type.choices = ['product','discount']
-        
+    
     if form.validate_on_submit():
         user_id = current_user.id
         f = form.image.data
@@ -154,6 +156,7 @@ def homelogged():
 
         db.session.add(post_created)
         db.session.commit()
+        return redirect(url_for('homelogged'))
 
     return render_template(
         'homelogged.html',
@@ -165,6 +168,24 @@ def homelogged():
         discount_posts=Post.query.filter_by(is_discount=True),
         form=form
     )
+
+
+@app.route("/update_post/<post_id>", methods=['POST'])
+@login_required
+def update_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.user_id != current_user.id:
+        flash('You cant update this post!', 'danger')
+    form = PostForm()
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.content = form.content.data
+        db.session.commit()
+        flash('Your post has been updated!', 'success')
+    #elif request.method == 'GET':
+        #form.title.data = post.title
+        #form.content.data = post.content
+    return redirect(url_for('homelogged'))
 
 
 @app.route("/delete_post/<post_id>", methods=['POST'])
@@ -198,13 +219,15 @@ def account():
         db.session.commit()
         flash('Your Account is updated!','success')
         return redirect (url_for('account'))
-    #elif request.method =='GET':
-     #   form.name.data=current_user.name
-      #  form.email.data=current_user.email
+    elif request.method =='GET':
+        form.name.data=current_user.name
+        form.email.data=current_user.email
 
     return render_template(
         'account.html', title='account',form=form,
         all_posts=Post.query.filter_by(user_id=current_user.id))
+
+
      
 @app.route("/asosnews", methods=['GET', 'POST'])
 @login_required
