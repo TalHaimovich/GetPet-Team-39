@@ -39,6 +39,10 @@ class Post(db.Model):
     is_foster = db.Column(db.Boolean, default=False, nullable=False)
     is_product = db.Column(db.Boolean, default=False, nullable=False)
     is_discount = db.Column(db.Boolean, default=False, nullable=False)
+        
+    is_events = db.Column(db.Boolean, default=False, nullable=False)
+    is_tips = db.Column(db.Boolean, default=False, nullable=False)
+
 
     def __repr__(self):
         return f"Post('{self.title}')"

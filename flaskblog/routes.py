@@ -10,20 +10,7 @@ import uuid
 from flask import Flask, render_template, session
 from flask_login import current_user
 
-posts = [
-    {
-        'author': 'Corey Schafer',
-        'title': 'Blog Post 1',
-        'content': 'First post content',
-        'date_posted': 'April 20, 2018'
-    },
-    {
-        'author': 'Jane Doe',
-        'title': 'Blog Post 2',
-        'content': 'Second post content',
-        'date_posted': 'April 21, 2018'
-    }
-]
+
 
 
 @app.route('/images/<path:path>')
@@ -41,7 +28,7 @@ def serve_uploads(path):
 def home():
     if current_user.is_authenticated:
         return redirect(url_for('homelogged'))
-    return render_template('home.html', posts=posts)
+    return render_template('home.html')
 
 
 @app.route("/about")
@@ -171,7 +158,7 @@ def homelogged():
     return render_template(
         'homelogged.html',
         title='homelogged',
-        all_posts=Post.query.all(),
+        all_posts=Post.query.filter_by(is_events=False,is_tips=False),
         adopt_posts=Post.query.filter_by(is_adopt=True),
         foster_posts=Post.query.filter_by(is_foster=True),
         product_posts=Post.query.filter_by(is_product=True),
@@ -219,3 +206,36 @@ def account():
         'account.html', title='account',form=form,
         all_posts=Post.query.filter_by(user_id=current_user.id))
      
+@app.route("/asosnews", methods=['GET', 'POST'])
+@login_required
+def asosnews():
+    form = PostForm()
+    if current_user.is_asos:
+        form.type.choices = ['events','tips']
+    
+    if form.validate_on_submit():
+        user_id = current_user.id
+        f = form.image.data
+        filename = None
+        if f:
+            filename = get_and_save_image(f)
+        selected_type = form.type.data
+
+        is_events = selected_type == 'events'
+        is_tips = selected_type == 'tips'
+       
+    
+        post_created = Post(title=form.title.data, content=form.content.data, user_id=user_id, image=filename,
+                            is_events=is_events, is_tips=is_tips)
+
+        db.session.add(post_created)
+        db.session.commit()
+     
+    return render_template(
+        'asosnews.html',
+        title='asosnews',
+        all_posts=Post.query.filter_by(is_discount=False,is_product=False,is_foster=False,is_adopt=False),
+        asos_events_posts=Post.query.filter_by(is_events=True),
+        asos_tips_posts=Post.query.filter_by(is_tips=True),
+        form=form
+    )
