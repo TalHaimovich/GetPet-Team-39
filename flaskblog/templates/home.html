@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST" action="">
+            <legend class="border-bottom mb-4">רוצים חיות?! בואו לפה</legend>
+            <p>מה ניש, צריך להתחבר לפני</p>
+            <br>
+            <div class="form-group">
+                <a class="btn btn-outline-info" href="{{ url_for('login') }}">התחבר</a>
+                <br>
+                <br>
+                <a class="btn btn-outline-info" href="{{ url_for('register') }}">הרשם</a>
+            </div>
+        </form>
+    </div>
+{% endblock content %}
