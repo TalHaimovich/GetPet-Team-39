@@ -10,22 +10,6 @@ import uuid
 from flask import Flask, render_template, session
 from flask_login import current_user
 
-posts = [
-    {
-        'author': 'Corey Schafer',
-        'title': 'Blog Post 1',
-        'content': 'First post content',
-        'date_posted': 'April 20, 2018'
-    },
-    {
-        'author': 'Jane Doe',
-        'title': 'Blog Post 2',
-        'content': 'Second post content',
-        'date_posted': 'April 21, 2018'
-    }
-]
-
-
 @app.route('/images/<path:path>')
 def serve_images(path):
     return send_from_directory('images', path)
@@ -41,7 +25,7 @@ def serve_uploads(path):
 def home():
     if current_user.is_authenticated:
         return redirect(url_for('homelogged'))
-    return render_template('home.html', posts=posts)
+    return render_template('home.html')
 
 
 @app.route("/about")
@@ -212,8 +196,8 @@ def account():
         flash('Your Account is updated!','success')
         return redirect (url_for('account'))
     #elif request.method =='GET':
-     #   form.name.data=current_user.name
-      #  form.email.data=current_user.email
+        form.name.data=current_user.name
+        form.email.data=current_user.email
 
     return render_template(
         'account.html', title='account',form=form,
