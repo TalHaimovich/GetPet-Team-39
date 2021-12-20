@@ -1,5 +1,4 @@
-from flask import render_template, url_for, flash, redirect, send_from_directory, abort
-from werkzeug.wrappers import request
+from flask import render_template, url_for, flash, redirect, send_from_directory, abort, request
 from flaskblog import app, db, bcrypt
 from flaskblog.forms import RegistrationForm, LoginForm, AsosRegistrationForm, BusRegistrationForm, PostForm,UpdateAccountForm
 from flaskblog.models import User, Post
@@ -130,7 +129,7 @@ def homelogged():
     form = PostForm()
     if current_user.is_bus:
         form.type.choices = ['product','discount']
-        
+    
     if form.validate_on_submit():
         user_id = current_user.id
         f = form.image.data
@@ -151,6 +150,7 @@ def homelogged():
 
         db.session.add(post_created)
         db.session.commit()
+        return redirect(url_for('homelogged'))
 
     return render_template(
         'homelogged.html',
@@ -164,11 +164,11 @@ def homelogged():
     )
 
 
-@app.route("/update_post/<post_id>", methods=['GET', 'POST'])
+@app.route("/update_post/<post_id>", methods=['POST'])
 @login_required
 def update_post(post_id):
     post = Post.query.get_or_404(post_id)
-    if post.user_id != current_user:
+    if post.user_id != current_user.id:
         flash('You cant update this post!', 'danger')
     form = PostForm()
     if form.validate_on_submit():
@@ -176,12 +176,10 @@ def update_post(post_id):
         post.content = form.content.data
         db.session.commit()
         flash('Your post has been updated!', 'success')
-        return redirect(url_for('post', post_id=post.id))
-    elif request.method == 'GET':
-        form.title.data = post.title
-        form.content.data = post.content
-    return render_template('create_post.html', title='Update Post',
-                           form=form)
+    #elif request.method == 'GET':
+        #form.title.data = post.title
+        #form.content.data = post.content
+    return redirect(url_for('homelogged'))
 
 
 @app.route("/delete_post/<post_id>", methods=['POST'])
@@ -215,7 +213,7 @@ def account():
         db.session.commit()
         flash('Your Account is updated!','success')
         return redirect (url_for('account'))
-    #elif request.method =='GET':
+    elif request.method =='GET':
         form.name.data=current_user.name
         form.email.data=current_user.email
 
