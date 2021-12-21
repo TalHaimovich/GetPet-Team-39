@@ -12,7 +12,7 @@ class RegistrationForm(FlaskForm):
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     email = StringField('Email', validators=[DataRequired(), Email()])
     image = FileField('image', validators=[
-        FileAllowed(['jpg', 'png'], 'Images only!')
+        FileAllowed(['jpg', 'png','jfif'], 'Images only!')
     ])
     submit = SubmitField('Sign Up')
 
@@ -54,7 +54,7 @@ class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(min=2, max=20)])
     content = TextAreaField('Content', validators=[DataRequired(), Length(min=2, max=1000)])
     image = FileField('image', validators=[
-        FileAllowed(['jpg', 'png'], 'Images only!')
+        FileAllowed(['jpg', 'png','jfif'], 'Images only!')
     ])
     type = SelectField('Type',  validators=[DataRequired()], choices=['adopt', 'foster'])
     price = IntegerField('Price')
@@ -64,7 +64,7 @@ class UpdateAccountForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
     image = FileField('image', validators=[
-        FileAllowed(['jpg', 'png'], 'Images only!')
+        FileAllowed(['jpg', 'png','jfif'], 'Images only!')
     ])
     submit = SubmitField('Update')
 

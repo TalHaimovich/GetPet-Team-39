@@ -227,12 +227,17 @@ def account():
     if form.validate_on_submit():
         current_user.name=form.name.data
         current_user.email=form.email.data
+        current_user.image=form.image.data
+        filename = None
+        if current_user.image:
+            current_user.image = get_and_save_image(current_user.image)
         db.session.commit()
         flash('Your Account is updated!','success')
         return redirect (url_for('account'))
     elif request.method =='GET':
         form.name.data=current_user.name
         form.email.data=current_user.email
+        form.image.date=current_user.image
 
     return render_template(
         'account.html', title='account',form=form,
