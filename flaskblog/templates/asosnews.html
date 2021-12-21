@@ -1,0 +1,147 @@
+{% extends "layout.html" %}
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active" aria-current="page">כאן תוכלו להתעדכן בכל מה שחדש אצל האגודות ועמותות שלנו</li>
+    </ol>
+  </nav>
+    <!-- Button trigger modal -->
+    {% if current_user.is_asos %}
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createEventsAndTipsPostModal">
+            Add Events/Tips
+        </button>
+    {% endif %}
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="createEventsAndTipsPostModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createModalLabel">Add Event/Tip</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+                        <fieldset class="form-group">
+                            <div class="form-group">
+                                {{ form.title.label(class="form-control-label") }}
+                                {% if form.title.errors %}
+                                    {{ form.title(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.title.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.title(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.content.label(class="form-control-label") }}
+                                {% if form.content.errors %}
+                                    {{ form.content(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.content.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.content(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.image.label(class="form-control-label") }}
+
+                                {% if form.image.errors %}
+                                    {{ form.image(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.image.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.image(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.type.label(class="form-control-label") }}
+
+                                {% if form.type.errors %}
+                                    {{ form.type(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.type.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.type(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                        </fieldset>
+                        {{ form.submit(class="btn btn-outline-info") }}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <legend class="border-bottom mb-4"></legend>
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="margin-top: 20px">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="all-posts-tab" data-toggle="pill" href="#all-posts" href="#tips-posts" role="tab"
+                   aria-controls="all-posts" aria-selected="true">All</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="events-posts-tab" data-toggle="pill" href="#events-posts" role="tab"
+                   aria-controls="events-posts" aria-selected="true">Events</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="tips-posts-tab" data-toggle="pill" href="#tips-posts" role="tab"
+                   aria-controls="tips-posts" aria-selected="false">Tips</a>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="all-posts" role="tabpanel" aria-labelledby="all-posts-tab">
+                <div class="row">
+                    {% for post in asos_events_posts %}
+                        {% with post=post %}
+                            {% include 'ad_card.html' %}
+                        {% endwith %}
+                    {% endfor %}
+                    {% for post in asos_tips_posts %}
+                        {% with post=post %}
+                            {% include 'ad_card.html' %}
+                        {% endwith %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="tab-pane fade show" id="events-posts" role="tabpanel" aria-labelledby="events-posts-tab">
+                <div class="row">
+                    {% for post in asos_events_posts %}
+                        {% with post=post %}
+                            {% include 'ad_card.html' %}
+                        {% endwith %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="tab-pane fade" id="tips-posts" role="tabpanel" aria-labelledby="tips-posts-tab">
+                <div class="row">
+                    {% for post in asos_tips_posts %}
+                        {% with post=post %}
+                            {% include 'ad_card.html' %}
+                        {% endwith %}
+                    {% endfor %}
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+{% endblock content %}
