@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, send_from_directory, abort, request
 from flaskblog import app, db, bcrypt
-from flaskblog.forms import RegistrationForm, LoginForm, AsosRegistrationForm, BusRegistrationForm, PostForm,UpdateAccountForm
-from flaskblog.models import User, Post
+from flaskblog.forms import RegistrationForm, LoginForm, AsosRegistrationForm, BusRegistrationForm, PostForm,UpdateAccountForm, SendPetCoinForm
+from flaskblog.models import User, Post, PostReport
 from flask_login import login_user, current_user, logout_user, login_required, login_manager
 from werkzeug.utils import secure_filename
 import os
@@ -123,13 +123,27 @@ def login():
     return render_template('login.html', title='Login', form=form)
 
 
+@app.route("/send_pet_coin", methods=['POST'])
+@login_required
+def send_pet_coin():
+    form = SendPetCoinForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        user.pet_coin += form.amount.data
+        current_user.pet_coin_capacity -= form.amount.data
+        db.session.commit()
+        flash('Transaction completed', 'success')
+    return redirect(url_for('homelogged'))
+
+
 @app.route("/homelogged", methods=['GET', 'POST'])
 @login_required
 def homelogged():
+    send_pet_coin_form = request.args.get('send_pet_coin_form') if request.args.get('send_pet_coin_form') else SendPetCoinForm()
     form = PostForm()
     if current_user.is_bus:
-        form.type.choices = ['product','discount']
-    
+        form.type.choices = ['product', 'discount']
+
     if form.validate_on_submit():
         user_id = current_user.id
         f = form.image.data
@@ -142,11 +156,10 @@ def homelogged():
         is_foster = selected_type == 'foster'
         is_product = selected_type == 'product'
         is_discount = selected_type == 'discount'
-        
 
         post_created = Post(title=form.title.data, content=form.content.data, user_id=user_id, image=filename,
                             is_adopt=is_adopt, is_foster=is_foster, is_product=is_product,is_discount=is_discount,
-                             price=form.price.data)
+                            price=form.price.data)
 
         db.session.add(post_created)
         db.session.commit()
@@ -155,31 +168,14 @@ def homelogged():
     return render_template(
         'homelogged.html',
         title='homelogged',
-        all_posts=Post.query.filter_by(is_events=False,is_tips=False),
+        all_posts=Post.query.filter_by(is_update=False, is_events=False, is_tips=False),
         adopt_posts=Post.query.filter_by(is_adopt=True),
         foster_posts=Post.query.filter_by(is_foster=True),
         product_posts=Post.query.filter_by(is_product=True),
         discount_posts=Post.query.filter_by(is_discount=True),
-        form=form
+        form=form,
+        send_pet_coin_form=send_pet_coin_form
     )
-
-
-@app.route("/update_post/<post_id>", methods=['POST'])
-@login_required
-def update_post(post_id):
-    post = Post.query.get_or_404(post_id)
-    if post.user_id != current_user.id:
-        flash('You cant update this post!', 'danger')
-    form = PostForm()
-    if form.validate_on_submit():
-        post.title = form.title.data
-        post.content = form.content.data
-        db.session.commit()
-        flash('Your post has been updated!', 'success')
-    #elif request.method == 'GET':
-        #form.title.data = post.title
-        #form.content.data = post.content
-    return redirect(url_for('homelogged'))
 
 
 @app.route("/delete_post/<post_id>", methods=['POST'])
@@ -193,6 +189,27 @@ def delete_post(post_id):
             flash(f'Your post has been deleted!', 'success')
         else:
             flash(f'You cannot delete this post', 'danger')
+    else:
+        flash(f'Post with id - {post_id} does not exist', 'danger')
+    return redirect(url_for('homelogged'))
+
+
+@app.route("/report_post/<post_id>", methods=['POST'])
+@login_required
+def report_post(post_id):
+    post = Post.query.get(post_id)
+    if post:
+        if PostReport.query.filter_by(user_id=current_user.id, post_id=post_id).count() > 0:
+            flash(f'Report already exist', 'danger')
+        else:
+            post_report = PostReport(user_id=current_user.id, post_id=post_id)
+            db.session.add(post_report)
+
+            if PostReport.query.filter_by(post_id=post_id).count() > 2:
+                db.session.delete(post)
+
+            db.session.commit()
+            flash(f'Your report has been created!', 'success')
     else:
         flash(f'Post with id - {post_id} does not exist', 'danger')
     return redirect(url_for('homelogged'))
@@ -222,14 +239,13 @@ def account():
         all_posts=Post.query.filter_by(user_id=current_user.id))
 
 
-     
 @app.route("/asosnews", methods=['GET', 'POST'])
 @login_required
 def asosnews():
     form = PostForm()
     if current_user.is_asos:
-        form.type.choices = ['events','tips']
-    
+        form.type.choices = ['events', 'tips']
+
     if form.validate_on_submit():
         user_id = current_user.id
         f = form.image.data
@@ -240,19 +256,49 @@ def asosnews():
 
         is_events = selected_type == 'events'
         is_tips = selected_type == 'tips'
-       
-    
+
         post_created = Post(title=form.title.data, content=form.content.data, user_id=user_id, image=filename,
                             is_events=is_events, is_tips=is_tips)
 
         db.session.add(post_created)
         db.session.commit()
-     
+
     return render_template(
         'asosnews.html',
         title='asosnews',
-        all_posts=Post.query.filter_by(is_discount=False,is_product=False,is_foster=False,is_adopt=False),
+        all_posts=Post.query.filter_by(is_discount=False, is_product=False, is_foster=False, is_adopt=False),
         asos_events_posts=Post.query.filter_by(is_events=True),
         asos_tips_posts=Post.query.filter_by(is_tips=True),
+        form=form
+    )
+
+
+@app.route("/busipdate", methods=['GET', 'POST'])
+def busupdate():
+    form = PostForm()
+    if current_user.is_bus:
+        form.type.choices = ['update']
+
+    if form.validate_on_submit():
+        user_id = current_user.id
+        f = form.image.data
+        filename = None
+        if f:
+            filename = get_and_save_image(f)
+        selected_type = form.type.data
+
+        is_update = selected_type == 'update'
+
+        post_created = Post(title=form.title.data, content=form.content.data, user_id=user_id, image=filename,
+                            is_update=is_update,
+                            price=form.price.data)
+
+        db.session.add(post_created)
+        db.session.commit()
+
+    return render_template(
+        'busupdate.html',
+        title='Bus-Updates',
+        update_posts=Post.query.filter_by(is_update=True),
         form=form
     )

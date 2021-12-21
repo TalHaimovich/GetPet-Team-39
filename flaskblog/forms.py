@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, TextAreaField, SelectField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, NumberRange
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 from flaskblog.models import User
 from flask_login import current_user
@@ -73,3 +73,17 @@ class UpdateAccountForm(FlaskForm):
             user = User.query.filter_by(email=email.data).first()
             if user:
                 raise ValidationError('That email is taken. please choose another')
+
+
+class SendPetCoinForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    amount = IntegerField('Amount', validators=[DataRequired()])
+    submit = SubmitField('Send')
+
+    def validate_email(self, email):
+        if email.data == current_user.email:
+            raise ValidationError("Choose other email")
+
+        user = User.query.filter_by(email=email.data).first()
+        if not user:
+            raise ValidationError('User with this email does not exist')

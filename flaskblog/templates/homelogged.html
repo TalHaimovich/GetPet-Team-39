@@ -1,5 +1,10 @@
 {% extends "layout.html" %}
 {% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active" aria-current="page">  GetPet ברוכים הבאים לאתר הרשמי של</li>
+    </ol>
+  </nav>
     <!-- Button trigger modal -->
     {% if not current_user.is_bus %}
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createPostModal">
@@ -12,8 +17,62 @@
             Create product
         </button>
     {% endif %}
+    {% if not current_user.is_bus %}
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#sendPetCoinPostModal">
+        Send PetCoin
+    </button>
+    {% endif %}
     <!-- Modal -->
-    <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal fade" id="sendPetCoinPostModal" tabindex="-1" aria-labelledby="sendPetCoinModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="sendPetCoinModalLabel">Send pet coin</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="/send_pet_coin">
+                        {{ send_pet_coin_form.hidden_tag() }}
+                        <fieldset class="form-group">
+                            <div class="form-group">
+                                {{ send_pet_coin_form.email.label(class="form-control-label") }}
+                                {% if send_pet_coin_form.email.errors %}
+                                    {{ send_pet_coin_form.email(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in send_pet_coin_form.email.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ send_pet_coin_form.email(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ send_pet_coin_form.amount.label(class="form-control-label") }}
+                                {% if send_pet_coin_form.amount.errors %}
+                                    {{ send_pet_coin_form.content(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in send_pet_coin_form.amount.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ send_pet_coin_form.amount(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                        </fieldset>
+                        {{ send_pet_coin_form.submit(class="btn btn-outline-info") }}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -23,7 +82,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="">
+                    <form method="POST" action="" enctype="multipart/form-data">
                         {{ form.hidden_tag() }}
                         <fieldset class="form-group">
                             <div class="form-group">
@@ -142,7 +201,7 @@
                                     {{ form.image(class="form-control form-control-lg") }}
                                 {% endif %}
                             </div>
-                           
+
                             <div class="form-group">
                                 {{ form.price.label(class="form-control-label") }}
 
@@ -158,7 +217,7 @@
                                 {% endif %}
                             </div>
 
-                            
+
                             <div class="form-group">
                                 {{ form.type.label(class="form-control-label") }}
 
@@ -174,7 +233,7 @@
                                 {% endif %}
                             </div>
 
-                            
+
                         </fieldset>
                         {{ form.submit(class="btn btn-outline-info") }}
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -183,7 +242,7 @@
             </div>
         </div>
     </div>
-
+    <legend class="border-bottom mb-4"></legend>
     <div class="container">
         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="margin-top: 20px">
             <li class="nav-item" role="presentation">
@@ -206,7 +265,6 @@
                 <a class="nav-link" id="discount-posts-tab" data-toggle="pill" href="#discount-posts" role="tab"
                    aria-controls="discount-posts" aria-selected="false">Discount</a>
             </li>
-
 
 
         </ul>
