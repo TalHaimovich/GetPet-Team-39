@@ -234,12 +234,11 @@ def logout():
 def account():
     form=UpdateAccountForm()
     if form.validate_on_submit():
+        if form.image.data:
+            picture_file = get_and_save_image(form.image.data)
+            current_user.image=picture_file
         current_user.name=form.name.data
         current_user.email=form.email.data
-        current_user.image=form.image.data
-        filename = None
-        if current_user.image:
-            current_user.image = get_and_save_image(current_user.image)
         db.session.commit()
         flash('Your Account is updated!','success')
         return redirect (url_for('account'))
