@@ -132,8 +132,8 @@ def send_pet_coin():
         if current_user.pet_coin<form.amount.data and current_user.is_asos==False and current_user.is_bus==False:
             flash('not enough funds', 'danger')
         if (current_user.is_bus):
-            flash('buisness cannot transfer coins', 'danger')
-        if (current_user.pet_coin>form.amount.data and current_user.is_bus==False and current_user.is_asos==False) :
+            flash('buisness cannot transfer petcoins', 'danger')
+        if (current_user.pet_coin>=form.amount.data and current_user.is_bus==False and current_user.is_asos==False) :
             if user.is_asos == True or user.is_bus==True:
                 flash('associations and buisness cannot get petcoin', 'danger')
                 return redirect(url_for('homelogged'))
@@ -205,6 +205,8 @@ def delete_post(post_id):
     post = Post.query.get(post_id)
     if post:
         if post.user_id == current_user.id or current_user.is_admin:
+            if (current_user.pet_coin>50 and current_user.is_bus==False and current_user.is_asos== False):
+                current_user.pet_coin -= 50
             db.session.delete(post)
             db.session.commit()
             flash(f'Your post has been deleted!', 'success')
