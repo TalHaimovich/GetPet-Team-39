@@ -129,14 +129,25 @@ def send_pet_coin():
     form = SendPetCoinForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        if (current_user.pet_coin_capacity>form.amount.data) or (not current_user.is_asos) :
+        if current_user.pet_coin<form.amount.data and current_user.is_asos==False and current_user.is_bus==False:
+            flash('not enough funds', 'danger')
+        if (current_user.is_bus):
+            flash('buisness cannot transfer coins', 'danger')
+        if (current_user.pet_coin>form.amount.data and current_user.is_bus==False and current_user.is_asos==False) :
+            if user.is_asos == True or user.is_bus==True:
+                flash('associations and buisness cannot get petcoin', 'danger')
+                return redirect(url_for('homelogged'))
             user.pet_coin += form.amount.data 
-            current_user.pet_coin_capacity -= form.amount.data
+            current_user.pet_coin -= form.amount.data
             db.session.commit()
             flash('Transaction completed', 'success')
-        elif not (current_user.is_asos):
-            flash('Not enougth founds', 'danger')
         if (current_user.is_asos):
+            if user.is_asos == True or user.is_bus==True:
+                flash('associations and buisness cannot get petcoin', 'danger')
+                return redirect(url_for('homelogged'))
+            if form.amount.data>200:
+                flash('associations cannot transfer more then 200 petcoins', 'danger')
+                return redirect(url_for('homelogged'))
             user.pet_coin += form.amount.data 
             db.session.commit()
             flash('Transaction completed', 'success')
