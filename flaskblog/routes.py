@@ -169,7 +169,9 @@ def homelogged():
         post_created = Post(title=form.title.data, content=form.content.data, user_id=user_id, image=filename,
                             is_adopt=is_adopt, is_foster=is_foster, is_product=is_product,is_discount=is_discount,
                             price=form.price.data)
-
+                            
+        if current_user.is_bus == False and current_user.is_asos == False:
+            current_user.pet_coin += 50
         db.session.add(post_created)
         db.session.commit()
         return redirect(url_for('homelogged'))
