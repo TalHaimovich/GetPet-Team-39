@@ -129,10 +129,19 @@ def send_pet_coin():
     form = SendPetCoinForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        user.pet_coin += form.amount.data
-        current_user.pet_coin_capacity -= form.amount.data
-        db.session.commit()
-        flash('Transaction completed', 'success')
+        if (current_user.pet_coin_capacity>form.amount.data) or (not current_user.is_asos) :
+            user.pet_coin += form.amount.data 
+            current_user.pet_coin_capacity -= form.amount.data
+            db.session.commit()
+            flash('Transaction completed', 'success')
+        elif not (current_user.is_asos):
+            flash('Not enougth founds', 'danger')
+        if (current_user.is_asos):
+            user.pet_coin += form.amount.data 
+            db.session.commit()
+            flash('Transaction completed', 'success')
+    else:
+        flash('Transaction error', 'danger')
     return redirect(url_for('homelogged'))
 
 
@@ -242,7 +251,6 @@ def account():
         'account.html', title='account',form=form,
         all_posts=Post.query.filter_by(user_id=current_user.id))
 
-
 @app.route("/asosnews", methods=['GET', 'POST'])
 @login_required
 def asosnews():
@@ -306,3 +314,8 @@ def busupdate():
         update_posts=Post.query.filter_by(is_update=True),
         form=form
     )
+
+@app.route("/reports")
+def reports():
+    
+    return render_template('reports.html')
