@@ -1,5 +1,10 @@
 {% extends "layout.html" %}
 {% block content %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page"> GetPet ברוכים הבאים לאתר הרשמי של</li>
+        </ol>
+    </nav>
     <!-- Button trigger modal -->
     {% if not current_user.is_bus %}
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createPostModal">
@@ -12,178 +17,24 @@
             Create product
         </button>
     {% endif %}
-    <!-- Modal -->
-    <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="createModalLabel">Create post</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form method="POST" action="">
-                        {{ form.hidden_tag() }}
-                        <fieldset class="form-group">
-                            <div class="form-group">
-                                {{ form.title.label(class="form-control-label") }}
-                                {% if form.title.errors %}
-                                    {{ form.title(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.title.errors %}
-                                            <span>{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {{ form.title(class="form-control form-control-lg") }}
-                                {% endif %}
-                            </div>
-                            <div class="form-group">
-                                {{ form.content.label(class="form-control-label") }}
-                                {% if form.content.errors %}
-                                    {{ form.content(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.content.errors %}
-                                            <span>{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {{ form.content(class="form-control form-control-lg") }}
-                                {% endif %}
-                            </div>
-                            <div class="form-group">
-                                {{ form.image.label(class="form-control-label") }}
+    {% if not current_user.is_bus %}
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#sendPetCoinPostModal">
+            Send PetCoin
+        </button>
+    {% endif %}
 
-                                {% if form.image.errors %}
-                                    {{ form.image(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.image.errors %}
-                                            <span>{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {{ form.image(class="form-control form-control-lg") }}
-                                {% endif %}
-                            </div>
-                            <div class="form-group">
-                                {{ form.type.label(class="form-control-label") }}
+    <!-- Modals -->
+    {% with modalId="createPostModal", form=create_post_form, modalTitle="Create Post" %}
+        {% include 'modals/create_post_modal.html' %}
+    {% endwith %}
+    {% with modalId="createProductPostModal", form=create_post_form, modalTitle="Create Product", show_price=true %}
+        {% include 'modals/create_post_modal.html' %}
+    {% endwith %}
+    {% with modalId="createProductPostModal", form=send_pet_coin_form %}
+        {% include 'modals/send_petcoin_modal.html' %}
+    {% endwith %}
 
-                                {% if form.type.errors %}
-                                    {{ form.type(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.type.errors %}
-                                            <span>{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {{ form.type(class="form-control form-control-lg") }}
-                                {% endif %}
-                            </div>
-                        </fieldset>
-                        {{ form.submit(class="btn btn-outline-info") }}
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="createProductPostModal" tabindex="-1" aria-labelledby="createProductModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="createModalLabel">Create product</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form method="POST" action="">
-                        {{ form.hidden_tag() }}
-                        <fieldset class="form-group">
-                            <div class="form-group">
-                                {{ form.title.label(class="form-control-label") }}
-                                {% if form.title.errors %}
-                                    {{ form.title(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.title.errors %}
-                                            <span>{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {{ form.title(class="form-control form-control-lg") }}
-                                {% endif %}
-                            </div>
-                            <div class="form-group">
-                                {{ form.content.label(class="form-control-label") }}
-                                {% if form.content.errors %}
-                                    {{ form.content(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.content.errors %}
-                                            <span>{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {{ form.content(class="form-control form-control-lg") }}
-                                {% endif %}
-                            </div>
-                            <div class="form-group">
-                                {{ form.image.label(class="form-control-label") }}
-
-                                {% if form.image.errors %}
-                                    {{ form.image(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.image.errors %}
-                                            <span>{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {{ form.image(class="form-control form-control-lg") }}
-                                {% endif %}
-                            </div>
-                           
-                            <div class="form-group">
-                                {{ form.price.label(class="form-control-label") }}
-
-                                {% if form.price.errors %}
-                                    {{ form.price(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.price.errors %}
-                                            <span>{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {{ form.price(class="form-control form-control-lg") }}
-                                {% endif %}
-                            </div>
-
-                            
-                            <div class="form-group">
-                                {{ form.type.label(class="form-control-label") }}
-
-                                {% if form.type.errors %}
-                                    {{ form.type(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.type.errors %}
-                                            <span>{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {{ form.type(class="form-control form-control-lg") }}
-                                {% endif %}
-                            </div>
-
-                            
-                        </fieldset>
-                        {{ form.submit(class="btn btn-outline-info") }}
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <legend class="border-bottom mb-4"></legend>
     <div class="container">
         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="margin-top: 20px">
             <li class="nav-item" role="presentation">
@@ -206,7 +57,6 @@
                 <a class="nav-link" id="discount-posts-tab" data-toggle="pill" href="#discount-posts" role="tab"
                    aria-controls="discount-posts" aria-selected="false">Discount</a>
             </li>
-
 
 
         </ul>
