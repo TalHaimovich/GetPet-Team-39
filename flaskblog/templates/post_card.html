@@ -1,4 +1,21 @@
 <div class="card" style="width: 15rem; margin: 10px">
+    <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">
+        {% if post.is_foster %}
+            Foster
+        {% elif post.is_adopt %}
+            Adopt
+        {% elif post.is_events %}
+            Event
+        {% elif post.is_product %}
+            Product
+        {% elif post.is_discount %}
+            Discount
+        {% elif post.is_tips %}
+            Tip
+        {% elif post.is_update %}
+            Update
+        {% endif %}
+    </div>
     <img src="uploads/{{ post.image }}" class="card-img-top" alt=""/>
     <div class="card-body">
         <h5 class="card-title">{{ post.title }}</h5>
@@ -12,16 +29,23 @@
         <p class="card-text">posted by - {{ post.user.name }}</p>
         <a class="nav-item nav-link" href="mailto:{{ post.user.email }}">Send email</a>
         <p class="card-text"><small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d %H:%M') }}
-</small></p>
-        <form action="/delete_post/{{ post.id }}" method="POST" >
-            <button {% if post.user != current_user %}disabled{%endif%} type="submit" class="btn btn-primary">
+        </small></p>
+        <form action="/delete_post/{{ post.id }}" method="POST">
+            <button {% if post.user != current_user %}disabled{% endif %} type="submit" class="btn btn-primary">
                 Delete
             </button>
         </form>
-        <form action="/report_post/{{ post.id }}" method="POST" >
-            <button {% if post.user == current_user %}disabled{%endif%} type="submit" class="btn btn-primary">
+        <form action="/report_post/{{ post.id }}" method="POST">
+            <button {% if post.user == current_user %}disabled{% endif %} type="submit" class="btn btn-primary">
                 Report abuse
             </button>
         </form>
+        <button {% if post.user != current_user %}disabled{% endif %} type="submit" class="btn btn-primary"
+                data-toggle="modal" data-target="#{{ post.id }}">
+            Edit
+        </button>
     </div>
 </div>
+{% with modalId=post.id, form=create_post_form, post=post, show_price=post.is_product or post.is_discount %}
+    {% include 'modals/update_post_modal.html' %}
+{% endwith %}

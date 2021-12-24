@@ -12,7 +12,7 @@ class RegistrationForm(FlaskForm):
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     email = StringField('Email', validators=[DataRequired(), Email()])
     image = FileField('image', validators=[
-        FileAllowed(['jpg', 'png','jfif'], 'Images only!')
+        FileAllowed(['jpg', 'png'], 'Images only!')
     ])
     submit = SubmitField('Sign Up')
 
@@ -50,21 +50,11 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 
-class PostForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired(), Length(min=2, max=20)])
-    content = TextAreaField('Content', validators=[DataRequired(), Length(min=2, max=1000)])
-    image = FileField('image', validators=[
-        FileAllowed(['jpg', 'png','jfif'], 'Images only!')
-    ])
-    type = SelectField('Type',  validators=[DataRequired()], choices=['adopt', 'foster'])
-    price = IntegerField('Price')
-    submit = SubmitField('Save')
-
 class UpdateAccountForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
     image = FileField('image', validators=[
-        FileAllowed(['jpg', 'png','jfif'], 'Images only!')
+        FileAllowed(['jpg', 'png'], 'Images only!')
     ])
     submit = SubmitField('Update')
 
@@ -80,10 +70,14 @@ class SendPetCoinForm(FlaskForm):
     amount = IntegerField('Amount', validators=[DataRequired()])
     submit = SubmitField('Send')
 
-    def validate_email(self, email):
-        if email.data == current_user.email:
-            raise ValidationError("Choose other email")
 
-        user = User.query.filter_by(email=email.data).first()
-        if not user:
-            raise ValidationError('User with this email does not exist')
+class PostForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired(), Length(min=2, max=20)])
+    content = TextAreaField('Content', validators=[DataRequired(), Length(min=2, max=1000)])
+    image = FileField('image', validators=[
+        FileAllowed(['jpg', 'png'], 'Images only!')
+    ])
+    type = SelectField('Type',  validators=[DataRequired()], choices=['adopt', 'foster', 'product', 'discount',
+                                                                      'events', 'tips', 'update'])
+    price = IntegerField('Price')
+    submit = SubmitField('Save')
