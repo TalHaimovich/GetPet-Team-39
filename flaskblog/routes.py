@@ -221,6 +221,7 @@ def reports():
         amount_posts=Post.query.count(),
         amount_users=User.query.count(),
         amount_pet_coint=db.session.query(func.sum(User.pet_coin)).filter(User.is_bus == False, User.is_asos == False)[0][0],
+        regular=User.query.filter_by(is_bus=False, is_asos=False),
         buisnesses=User.query.filter_by(is_bus=True),
         asos=User.query.filter_by(is_asos=True)
 
@@ -233,6 +234,8 @@ def delete_post(post_id):
     post = Post.query.get(post_id)
     if post:
         if post.user_id == current_user.id or current_user.is_admin:
+            if (current_user.pet_coin>=50 and current_user.is_bus==False and current_user.is_asos== False):
+                current_user.pet_coin -= 50
             db.session.delete(post)
             db.session.commit()
             flash(f'Your post has been deleted!', 'success')
@@ -267,7 +270,8 @@ def create_post():
         post_created = Post(title=form.title.data, content=form.content.data, user_id=user_id, image=filename,
                             is_adopt=is_adopt, is_foster=is_foster, is_product=is_product, is_discount=is_discount,
                             price=form.price.data, is_tips=is_tips, is_events=is_events, is_update=is_update)
-
+        if current_user.is_bus == False and current_user.is_asos == False:
+            current_user.pet_coin += 50
         db.session.add(post_created)
         db.session.commit()
         flash('Post created successfully', 'success')
@@ -348,7 +352,8 @@ def account():
 
     return render_template(
         'account.html', title='account', form=form,
-        all_posts=Post.query.filter_by(user_id=current_user.id))
+        all_posts=Post.query.filter_by(user_id=current_user.id),
+        create_post_form=PostForm())
 
 
 @app.route("/asosnews", methods=['GET', 'POST'])
