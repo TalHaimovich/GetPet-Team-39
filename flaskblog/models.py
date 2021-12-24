@@ -23,6 +23,7 @@ class User(db.Model, UserMixin):
     pet_coin_capacity = db.Column(db.Integer, default=200, nullable=False)
 
     posts = db.relationship('Post', backref='user')
+    posts_reports = db.relationship('PostReport', backref='user')
 
     def __repr__(self):
         return f"User('{self.name}','{self.email}')"
