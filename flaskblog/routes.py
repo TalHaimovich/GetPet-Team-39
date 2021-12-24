@@ -5,6 +5,7 @@ from flask import render_template
 from flask import url_for, flash, redirect, send_from_directory, request
 from flask_login import current_user
 from flask_login import login_user, logout_user, login_required
+from sqlalchemy.orm import query
 from werkzeug.utils import secure_filename
 
 from flaskblog import app, db, bcrypt
@@ -212,13 +213,17 @@ def reports():
 
         users.append(user_dict)
 
+
     return render_template(
         'reports.html',
         title='reports',
         users=users,
         amount_posts=Post.query.count(),
         amount_users=User.query.count(),
-        amount_pet_coint=db.session.query(func.sum(User.pet_coin)).filter(User.is_bus == False, User.is_asos == False)[0][0]
+        amount_pet_coint=db.session.query(func.sum(User.pet_coin)).filter(User.is_bus == False, User.is_asos == False)[0][0],
+        buisnesses=User.query.filter_by(is_bus=True),
+        asos=User.query.filter_by(is_asos=True)
+
     )
 
 

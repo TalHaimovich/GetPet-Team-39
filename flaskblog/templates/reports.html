@@ -1,10 +1,26 @@
 {% extends "layout.html" %}
 {% block content %}
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">כאן תוכלו להנות ממגוון דוחות</li>
+        </ol>
+    </nav>
+     <div class="content-section">
+
     <div class="container">
         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="margin-top: 20px">
             <li class="nav-item" role="presentation">
                 <a class="nav-link active" id="users-tab" data-toggle="pill" href="#users" role="tab"
                    aria-controls="users" aria-selected="true">Users</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="buisnesses-tab" data-toggle="pill" href="#buisnesses" role="tab"
+                   aria-controls="all-posts" aria-selected="true">Buisnesses</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="asos-tab" data-toggle="pill" href="#asos" role="tab"
+                   aria-controls="all-posts" aria-selected="true">Association</a>
             </li>
             <li class="nav-item" role="presentation">
                 <a class="nav-link" id="post-reports-tab" data-toggle="pill" href="#post_reports" role="tab"
@@ -45,6 +61,27 @@
                     Amount pet coins: {{ amount_pet_coint }}
                 </div>
             </div>
+            <div class="tab-pane fade show" id="buisnesses" role="tabpanel" aria-labelledby="post-reports-tab">
+                {% with columns=[{'name': 'id', 'title': 'ID'},
+                                 {'name': 'name', 'title': 'Name'},
+                                 {'name': 'email', 'title': 'Email'},
+                                 {'name': 'bus_id', 'title': 'Bus ID'},
+                                 {'name': 'amount_posts', 'title': 'Amount posts'},
+                                 ], rows=buisnesses %}
+                    {% include 'table.html' %}
+                {% endwith %}
+            </div>
+            <div class="tab-pane fade show" id="asos" role="tabpanel" aria-labelledby="asos-tab">
+                {% with columns=[{'name': 'id', 'title': 'ID'},
+                                 {'name': 'name', 'title': 'Name'},
+                                 {'name': 'email', 'title': 'Email'},
+                                 {'name': 'address', 'title': 'Address'},
+                                 {'name': 'amount_posts', 'title': 'Amount posts'},
+                                 ], rows=asos %}
+                    {% include 'table.html' %}
+                {% endwith %}
+            </div>
         </div>
+    </div>
     </div>
 {% endblock content %}
