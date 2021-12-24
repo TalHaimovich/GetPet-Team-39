@@ -18,9 +18,17 @@
                             Delete
                         </button>
                 </form>
+                <button {% if post.user != current_user %}disabled{% endif %} type="submit" class="btn btn-primary"
+                data-toggle="modal" data-target="#{{ post.id }}">
+                    Edit
+                </button>
+
                 </p>
             </div>
 
         </div>
     </div>
 </div>
+{% with modalId=post.id, form=create_post_form, post=post, show_price=post.is_product or post.is_discount %}
+    {% include 'modals/update_post_modal.html' %}
+{% endwith %}
