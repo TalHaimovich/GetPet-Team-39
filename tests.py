@@ -13,32 +13,32 @@ class test_models(unittest.TestCase):
 #test for creating a post in the db
     def test_new_post(self):
         new_post=Post(id=112233,user_id=56789,title="Testing-Post",content="Post-Content",date_posted='April 21, 2018')
-        assert new_post.id==112233
-        assert new_post.user_id==56789
-        assert new_post.title=="Testing-Post"
-        assert new_post.content=="Post-Content"
+        assert new_post.id==112233,"should be equal"
+        assert new_post.user_id==56789,"should be equal"
+        assert new_post.title=="Testing-Post","should be equal"
+        assert new_post.content=="Post-Content","should be equal"
         assert new_post.date_posted=='April 21, 2018'
-        assert new_post.id != 1234
-        assert new_post.user_id!=12212
-        assert new_post.is_foster!=True
-        assert new_post.is_discount!=True
-        assert new_post.is_adopt!=True
-        assert new_post.is_product!=True
-        assert new_post.is_event!=True
+        assert new_post.id != 1234, "should not be equal"
+        assert new_post.user_id!=12212,"should not be equal"
+        assert new_post.is_foster!=True, "should not be equal"
+        assert new_post.is_discount!=True, "should not be equal"
+        assert new_post.is_adopt!=True , "should not be equal"
+        assert new_post.is_product!=True, "should not be equal"
+        assert new_post.is_event!=True, "should not be equal"
 
  #test for making another type of post in the db
     def test_new_adopt_post(self):
-        new_post=Post(id=435,user_id=69089,title="Testing-Post",content="Post-Content",date_posted='April 21, 2018',is_adopt=True)
-        assert new_post.id==435
-        assert new_post.user_id==69089
-        assert new_post.title=="Testing-Post"
-        assert new_post.content=="Post-Content"
+        new_post=Post(id=435,user_id=69089,title="Testing-test",content="Post-post",date_posted='April 21, 2018',is_adopt=True)
+        assert new_post.id==435,"should be equal"
+        assert new_post.user_id==69089,"should be equal"
+        assert new_post.title=="Testing-test","should be equal"
+        assert new_post.content=="Post-post", "should be equal"
         assert new_post.date_posted=='April 21, 2018'
-        assert new_post.id != 1234
-        assert new_post.user_id!=12212
-        assert new_post.is_foster!=True
-        assert new_post.is_event!=True
-        assert new_post.is_adopt==True
+        assert new_post.id != 1234, "should not be equal"
+        assert new_post.user_id!=12212, "should not be equal"
+        assert new_post.is_foster!=True, "should not be equal"
+        assert new_post.is_event!=True ,"should not be equal"
+        assert new_post.is_adopt==True, "should be equal"  #check the flag that indicate of adopt post
 
     #test creation of a new user (test User "Ctor")
     def test_User(self):
@@ -48,6 +48,10 @@ class test_models(unittest.TestCase):
         assert new_user.id==123, "should be equal"
         assert new_user.name=="yosi", "should be equal"
         assert new_user.id!=1345, "should not be equal"
+        assert new_user.is_asos != True ,"should not be equal"
+        assert new_user.is_bus != True , "should not be equal"
+        assert new_user.is_admin != True,"should not be equal"
+
 
 
 
@@ -59,6 +63,8 @@ class test_models(unittest.TestCase):
         assert new_user.bus_id==4567, "should be equal"
         assert new_user.bus_id!=1345, "should not be equal"
         assert new_user.is_bus==True, "should be equal"     #check the flag that indicate of bussines user
+        assert new_user.is_asos != True,"should not be equal"
+        assert new_user.is_admin != True,"should not be equal"
         assert new_user.name=="Jhon", "should be equal"    
 
         #test creation of a new assosiationuser user (test User "Ctor"+ address + is_asos flag)
