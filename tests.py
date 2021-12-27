@@ -10,7 +10,7 @@ from flask import Flask
 class test_models(unittest.TestCase):
 
 
-
+#test for making a post in the db
     def test_new_post(self):
         new_post=Post(id=112233,user_id=56789,title="Testing-Post",content="Post-Content",date_posted='April 21, 2018')
         assert new_post.id==112233
@@ -20,6 +20,19 @@ class test_models(unittest.TestCase):
         assert new_post.date_posted=='April 21, 2018'
         assert new_post.id != 1234
         assert new_post.user_id!=12212
+
+ #test for making another type of post in the db
+    def test_new_adopt_post(self):
+        new_post=Post(id=435,user_id=69089,title="Testing-Post",content="Post-Content",date_posted='April 21, 2018',is_adopt=True)
+        assert new_post.id==435
+        assert new_post.user_id==69089
+        assert new_post.title=="Testing-Post"
+        assert new_post.content=="Post-Content"
+        assert new_post.date_posted=='April 21, 2018'
+        assert new_post.id != 1234
+        assert new_post.user_id!=12212
+        assert new_post.is_foster!=True
+        assert new_post.is_adopt==True
 
     #test creation of a new user (test User "Ctor")
     def test_User(self):
