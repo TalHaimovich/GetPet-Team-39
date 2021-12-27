@@ -15,15 +15,13 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     image = db.Column(db.String(100), nullable=False, default='default.jpg')
     address = db.Column(db.String(100), nullable=True)
-    bus_id = db.Column(db.Integer, nullable=True)
+    petcoin = db.Column(db.Integer, nullable=True)
+    bus_id = db.Column(db.Integer,default=0, nullable=True)
     is_bus = db.Column(db.Boolean, default=False, nullable=False)  # true if user is business user
     is_asos = db.Column(db.Boolean, default=False, nullable=False)  # true if user is asos user
     is_admin = db.Column(db.Boolean, default=False, nullable=False)  # true if user is admin user
-    pet_coin = db.Column(db.Integer, default=50, nullable=False)
-    pet_coin_capacity = db.Column(db.Integer, default=200, nullable=False)
 
     posts = db.relationship('Post', backref='user')
-    posts_reports = db.relationship('PostReport', backref='user')
 
     def __repr__(self):
         return f"User('{self.name}','{self.email}')"
@@ -42,15 +40,8 @@ class Post(db.Model):
     is_foster = db.Column(db.Boolean, default=False, nullable=False)
     is_product = db.Column(db.Boolean, default=False, nullable=False)
     is_discount = db.Column(db.Boolean, default=False, nullable=False)
-    is_update = db.Column(db.Boolean, default=False, nullable=False)
-    is_events = db.Column(db.Boolean, default=False, nullable=False)
-    is_tips = db.Column(db.Boolean, default=False, nullable=False)
+    is_event = db.Column(db.Boolean, default=False, nullable=False)
+
 
     def __repr__(self):
         return f"Post('{self.title}')"
-
-
-class PostReport(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
-    post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete="CASCADE"), nullable=False)
