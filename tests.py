@@ -41,6 +41,17 @@ class test_models(unittest.TestCase):
         assert new_user.bus_id!=1345, "should not be equal"
         assert new_user.is_bus==True, "should be equal"     #check the flag that indicate of bussines user
         assert new_user.name=="Jhon", "should be equal"    
+
+        #test creation of a new assosiationuser user (test User "Ctor"+ address + is_asos flag)
+    def test_assosiation_User(self):
+        new_user = User(name="Jim", email="avvv@yahooo.com", password="xzy456", address="Beer-Sheva", is_asos=True)
+        assert new_user.password=="xzy456","should be equal"
+        assert new_user.email=="avvv@yahooo.com", "should be equal"
+        assert new_user.address=="Beer-Sheva", "should be equal"
+        assert new_user.name=="Jim", "should be equal"
+        assert new_user.address!="Dimona", "should not be equal"
+        assert new_user.is_asos==True, "should be equal"     #check the flag that indicate of assosiationuser user
+
     
 
 if __name__ == '__main__':
