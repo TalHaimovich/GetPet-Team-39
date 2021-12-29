@@ -68,10 +68,10 @@ def registeruser():
         db.session.commit()
         flash(f'Your account have been created! You are now able to log in', 'success')
         return redirect(url_for('login'))
-    return render_template('registeruser.html', title='RegisterUser', form=form)
+    return render_template('registeruser.html', title='Register User', form=form)
 
 
-@app.route("/registerbus", methods=['GET', 'POST'])
+@app.route("/registerbusiness", methods=['GET', 'POST'])
 def registerbus():
     if current_user.is_authenticated:
         return redirect(url_for('homelogged'))
@@ -90,10 +90,10 @@ def registerbus():
         flash(f'Your account have been created! You are now able to log in', 'success')
         return redirect(url_for('login'))
 
-    return render_template('registerbus.html', title='RegisterBussines', form=form)
+    return render_template('registerbus.html', title='Register Bussines', form=form)
 
 
-@app.route("/registerasos", methods=['GET', 'POST'])
+@app.route("/registerassociation", methods=['GET', 'POST'])
 def registerasos():
     if current_user.is_authenticated:
         return redirect(url_for('homelogged'))
@@ -111,7 +111,7 @@ def registerasos():
         db.session.commit()
         flash(f'Your account have been created! You are now able to log in', 'success')
         return redirect(url_for('login'))
-    return render_template('registerasos.html', title='RegisterAssosition', form=form)
+    return render_template('registerasos.html', title='Register Assosition', form=form)
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -135,7 +135,7 @@ def logout():
     return redirect(url_for('home'))
 
 
-@app.route("/send_pet_coin", methods=['POST'])
+@app.route("/sendpetcoin", methods=['POST'])
 @login_required
 def send_pet_coin():
     form = SendPetCoinForm()
@@ -186,7 +186,7 @@ def homelogged():
 
     return render_template(
         'homelogged.html',
-        title='homelogged',
+        title='Home',
         all_posts=Post.query.filter_by(is_update=False, is_events=False, is_tips=False).join(User).order_by(
             User.pet_coin.desc()),  # add desc
         adopt_posts=Post.query.filter_by(is_adopt=True),
@@ -216,7 +216,7 @@ def reports():
 
     return render_template(
         'reports.html',
-        title='reports',
+        title='Reports',
         users=users,
         amount_posts=Post.query.count(),
         amount_users=User.query.count(),
@@ -224,7 +224,6 @@ def reports():
         regular=User.query.filter_by(is_bus=False, is_asos=False),
         buisnesses=User.query.filter_by(is_bus=True),
         asos=User.query.filter_by(is_asos=True)
-
     )
 
 
@@ -351,12 +350,12 @@ def account():
         form.image.date = current_user.image
 
     return render_template(
-        'account.html', title='account', form=form,
+        'account.html', title='Account', form=form,
         all_posts=Post.query.filter_by(user_id=current_user.id),
         create_post_form=PostForm())
 
 
-@app.route("/asosnews", methods=['GET', 'POST'])
+@app.route("/association_news", methods=['GET', 'POST'])
 @login_required
 def asosnews():
     create_post_form = PostForm()
@@ -365,7 +364,7 @@ def asosnews():
 
     return render_template(
         'asosnews.html',
-        title='asosnews',
+        title='Association News',
         all_posts=Post.query.filter_by(is_discount=False, is_product=False, is_foster=False, is_adopt=False),
         asos_events_posts=Post.query.filter_by(is_events=True),
         asos_tips_posts=Post.query.filter_by(is_tips=True),
@@ -373,7 +372,7 @@ def asosnews():
     )
 
 
-@app.route("/busipdate", methods=['GET', 'POST'])
+@app.route("/business_news", methods=['GET', 'POST'])
 def busupdate():
     create_post_form = PostForm()
     if current_user.is_bus:
@@ -381,7 +380,7 @@ def busupdate():
 
     return render_template(
         'busupdate.html',
-        title='Bus-Updates',
+        title='Business Updates',
         update_posts=Post.query.filter_by(is_update=True),
         create_post_form=create_post_form
     )
