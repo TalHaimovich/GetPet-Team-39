@@ -15,7 +15,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     image = db.Column(db.String(100), nullable=False, default='default.jpg')
     address = db.Column(db.String(100), nullable=True)
-    petcoin = db.Column(db.Integer, nullable=True)
+    petcoin = db.Column(db.Integer,default=200, nullable=True)
     bus_id = db.Column(db.Integer,default=0, nullable=True)
     is_bus = db.Column(db.Boolean, default=False, nullable=False)  # true if user is business user
     is_asos = db.Column(db.Boolean, default=False, nullable=False)  # true if user is asos user

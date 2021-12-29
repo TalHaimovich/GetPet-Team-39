@@ -73,12 +73,12 @@ def registeruser():
 
     form = RegistrationForm()    #init a registration form
     if form.validate_on_submit(): #validat the user input
-        f = form.image.data
+        f = form.image.data        #catching image uploaded by the user
         filename = None
         if f:
-            filename = get_and_save_image(f)  #catching the imaqge
+            filename = get_and_save_image(f) 
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8') #creating a hashed password based on the user input
-        user = User(name=form.name.data, email=form.email.data, password=hashed_password, image=filename) #init a new user
+        user = User(name=form.name.data, email=form.email.data, password=hashed_password, image=filename) #init a new user based on the form info
         db.session.add(user) #adding the new user for commition
         db.session.commit() #commit the new user to the data base
         flash(f'Your account have been created! You are now able to log in', 'success')
@@ -89,20 +89,20 @@ def registeruser():
 @app.route("/registerbus", methods=['GET', 'POST'])
 def registerbus():
     """route for business user registration page"""
-    if current_user.is_authenticated:
+    if current_user.is_authenticated:   #if the user is logged in, go to home-logged page
         return redirect(url_for('homelogged'))
-    form = BusRegistrationForm()    #init a bussines registration form
+    form = BusRegistrationForm()    #init a business registration form
 
-    if form.validate_on_submit():
-        f = form.image.data
+    if form.validate_on_submit(): #validat the user input
+        f = form.image.data        #catching image uploaded by the user
         filename = None
         if f:
             filename = get_and_save_image(f)
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(name=form.name.data, email=form.email.data, password=hashed_password, bus_id=form.bus_id.data,
-                    is_bus=True, image=filename)
-        db.session.add(user)
-        db.session.commit()
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')  #creating a hashed password based on the user input
+        user = User(name=form.name.data, email=form.email.data, password=hashed_password, bus_id=form.bus_id.data, #init a new user based on the form info
+                    is_bus=True, image=filename,petcoin=200)# Note: business user wil have a flag on (is_bus=True)
+        db.session.add(user) #adding the new user for commition
+        db.session.commit() #commit the new user to the data base
         flash(f'Your account have been created! You are now able to log in', 'success')
         return redirect(url_for('login'))
 
@@ -111,20 +111,21 @@ def registerbus():
 
 @app.route("/registerasos", methods=['GET', 'POST'])
 def registerasos():
-    if current_user.is_authenticated:
+    """route for association user registration page"""
+    if current_user.is_authenticated:     #if the user is logged in, go to home-logged page
         return redirect(url_for('homelogged'))
-    form = AsosRegistrationForm()
+    form = AsosRegistrationForm()       #init a association registration form
 
-    if form.validate_on_submit():
-        f = form.image.data
+    if form.validate_on_submit():  #validat the user input
+        f = form.image.data       #catching image uploaded by the user
         filename = None
         if f:
             filename = get_and_save_image(f)
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(name=form.name.data, email=form.email.data, password=hashed_password, address=form.address.data,
-                    is_asos=True, image=filename)
-        db.session.add(user)
-        db.session.commit()
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')  #creating a hashed password based on the user input
+        user = User(name=form.name.data, email=form.email.data, password=hashed_password, address=form.address.data,  #init a new user based on the form info
+                    is_asos=True, image=filename)# Note: association user wil have a flag on (is_asos=True)
+        db.session.add(user) #adding the new user for commition
+        db.session.commit() #commit the new user to the data base
         flash(f'Your account have been created! You are now able to log in', 'success')
         return redirect(url_for('login'))
     return render_template('registerasos.html', title='RegisterAssosition', form=form)
@@ -132,53 +133,55 @@ def registerasos():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-    if current_user.is_authenticated:
+    """route for login page for existing users"""
+    if current_user.is_authenticated:        #if the user is logged in, go to home-logged page
         return redirect(url_for('homelogged'))
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user and bcrypt.check_password_hash(user.password, form.password.data):
-            login_user(user, remember=form.remember.data)
-            return redirect(url_for('homelogged'))
+    form = LoginForm()   #init a login form
+    if form.validate_on_submit():  #validate user input 
+        user = User.query.filter_by(email=form.email.data).first()  #check if the user exist based on email
+        if user and bcrypt.check_password_hash(user.password, form.password.data): #check if the user enterd a valid password
+            login_user(user, remember=form.remember.data) #logih the user in case of valid input
+            return redirect(url_for('homelogged')) #redirection to the home-logged page
         else:
-            flash('Login Unsuccessful. Please check email and password', 'danger')
-    return render_template('login.html', title='Login', form=form)
+            flash('Login Unsuccessful. Please check email and password', 'danger') #if the user input is not valid, flash a msg
+    return render_template('login.html', title='Login', form=form) #if login was unsuccesful go back to the login page
 
 
 @app.route("/homelogged", methods=['GET', 'POST'])
 @login_required
 def homelogged():
-    form = PostForm()
-    if current_user.is_bus:
+    """route for home page for loged-in users"""
+    form = PostForm()   #init a form for post creation
+    if current_user.is_bus:     # if the user is a business user, let him make only product posts and discount posts
         form.type.choices = ['product','discount']
         
-    if form.validate_on_submit():
-        user_id = current_user.id
-        f = form.image.data
+    if form.validate_on_submit():     #validate user input for post forms 
+        user_id = current_user.id    #updating the user id for the post relationship
+        f = form.image.data        #chatch user uploaded image
         filename = None
         if f:
-            filename = get_and_save_image(f)
+            filename = get_and_save_image(f) 
         selected_type = form.type.data
 
-        is_adopt = selected_type == 'adopt'
-        is_foster = selected_type == 'foster'
-        is_product = selected_type == 'product'
-        is_discount = selected_type == 'discount'
+        is_adopt = selected_type == 'adopt'    #flag for adopt post
+        is_foster = selected_type == 'foster'  #flag for foster post
+        is_product = selected_type == 'product' #flag for product post
+        is_discount = selected_type == 'discount' #flag for discount post
         
 
-        post_created = Post(title=form.title.data, content=form.content.data, user_id=user_id, image=filename,
+        post_created = Post(title=form.title.data, content=form.content.data, user_id=user_id, image=filename,  #init a new post based on the user input
                             is_adopt=is_adopt, is_foster=is_foster, is_product=is_product,is_discount=is_discount,
                              price=form.price.data)
 
 
 
 
-        db.session.add(post_created)
-        db.session.commit()
+        db.session.add(post_created)  #add the post for later commition
+        db.session.commit()   #commit the post for the db
 
-    coinform=GivePetCoin()
-    if coinform.validate_on_submit():
-        user = User.query.filter_by(email=coinform.email.data).first()
+    coinform=GivePetCoin()  #init a form for giving "PetCoin"
+    if coinform.validate_on_submit(): #validate user input
+        user = User.query.filter_by(email=coinform.email.data).first() #check if the reciving user exist by email 
         if user:
             current_user.petcoin=current_user.petcoin+coinform.amount.data
             db.session.commit()

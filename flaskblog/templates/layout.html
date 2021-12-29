@@ -60,7 +60,7 @@
                         <div class="navbar-nav">
                             {% if current_user.is_authenticated %}
                             <div class="navbar">
-                            <a class="nav-item nav-link" href="{{ url_for('account') }}">PetCoin</a>
+                            <a class="nav-item nav-link" href="{{ url_for('account') }}">PetCoin:{{current_user.petcoin}}</a>
                             </div>
                             {% endif %}
                         </div>
