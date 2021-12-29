@@ -135,7 +135,7 @@ def logout():
     return redirect(url_for('home'))
 
 
-@app.route("/sendpetcoin", methods=['POST'])
+@app.route("/send_pet_coin", methods=['POST'])
 @login_required
 def send_pet_coin():
     form = SendPetCoinForm()
@@ -162,7 +162,7 @@ def send_pet_coin():
             else:
                 if current_user.pet_coin_capacity >= form.amount.data:
                     user.pet_coin += form.amount.data
-                    current_user.pet_coin_capacity -= form.amount.data
+                    current_user.pet_coin -= form.amount.data
                     db.session.commit()
                     flash('Transaction completed', 'success')
                 else:
