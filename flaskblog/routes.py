@@ -39,6 +39,7 @@ def serve_uploads(path):
 @app.route("/")
 @app.route("/home")
 def home():
+    """route for the home page, including login and registration access"""
     if current_user.is_authenticated:
         return redirect(url_for('homelogged'))
     return render_template('home.html', posts=posts)
@@ -46,15 +47,17 @@ def home():
 
 @app.route("/about")
 def about():
+    """route for the about page contaning information about the site and team"""
     return render_template('about.html', title='About')
 
 
 @app.route("/register")
 def register():
+    """route for the registration page, containing all the registaration options """
     return render_template('register.html', title='Register')
 
 
-def get_and_save_image(f):
+def get_and_save_image(f):  #function for geting the uploaded image
     base_dir = os.path.dirname(os.path.dirname(__file__))
     unique_filename = f'{uuid.uuid4()}_{f.filename}'
     filename = secure_filename(unique_filename)
@@ -64,19 +67,20 @@ def get_and_save_image(f):
 
 @app.route("/registeruser", methods=['GET', 'POST'])
 def registeruser():
-    if current_user.is_authenticated:
+    """route for regular user registration page"""
+    if current_user.is_authenticated:    #if the user is logged in, go to home-logged page
         return redirect(url_for('homelogged'))
 
-    form = RegistrationForm()
-    if form.validate_on_submit():
+    form = RegistrationForm()    #init a registration form
+    if form.validate_on_submit(): #validat the user input
         f = form.image.data
         filename = None
         if f:
-            filename = get_and_save_image(f)
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(name=form.name.data, email=form.email.data, password=hashed_password, image=filename)
-        db.session.add(user)
-        db.session.commit()
+            filename = get_and_save_image(f)  #catching the imaqge
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8') #creating a hashed password based on the user input
+        user = User(name=form.name.data, email=form.email.data, password=hashed_password, image=filename) #init a new user
+        db.session.add(user) #adding the new user for commition
+        db.session.commit() #commit the new user to the data base
         flash(f'Your account have been created! You are now able to log in', 'success')
         return redirect(url_for('login'))
     return render_template('registeruser.html', title='RegisterUser', form=form)
@@ -84,9 +88,10 @@ def registeruser():
 
 @app.route("/registerbus", methods=['GET', 'POST'])
 def registerbus():
+    """route for business user registration page"""
     if current_user.is_authenticated:
         return redirect(url_for('homelogged'))
-    form = BusRegistrationForm()
+    form = BusRegistrationForm()    #init a bussines registration form
 
     if form.validate_on_submit():
         f = form.image.data
