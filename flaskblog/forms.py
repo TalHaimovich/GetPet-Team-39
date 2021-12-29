@@ -23,7 +23,7 @@ class RegistrationForm(FlaskForm):
 
 
 class AsosRegistrationForm(RegistrationForm):
-    name = StringField('שם העמותה', validators=[DataRequired(), Length(min=2, max=20)])
+    name = StringField('Association name', validators=[DataRequired(), Length(min=2, max=20)])
     address = StringField('Address', validators=[DataRequired(), Length(min=2, max=20)])
 
     def validate_address(self, address):
@@ -33,7 +33,7 @@ class AsosRegistrationForm(RegistrationForm):
 
 
 class BusRegistrationForm(RegistrationForm):
-    name = StringField('שם העסק', validators=[DataRequired(), Length(min=2, max=20)])
+    name = StringField('Business name', validators=[DataRequired(), Length(min=2, max=20)])
     bus_id = IntegerField('bus id', validators=[DataRequired()])
 
     def validate_bus_id(self, bus_id):
