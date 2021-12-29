@@ -1,16 +1,20 @@
 {% extends "layout.html" %}
 {% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active" aria-current="page">הצטרפו לקהילה שלנו עוד היום</li>
+    </ol>
+  </nav>
     <div class="content-section">
         <form method="POST" action="">
-            <legend class="border-bottom mb-4">Come and get your pet!</legend>
+            <legend class="border-bottom mb-4">רוצים חיות?! בואו לפה</legend>
+            <p>מה ניש, צריך להתחבר לפני</p>
             <br>
-            <p>Please login to continue.</p>
             <div class="form-group">
-                <a class="btn btn-outline-info" href="{{ url_for('login') }}">Login</a>
+                <a class="btn btn-outline-info" href="{{ url_for('login') }}">התחבר</a>
                 <br>
                 <br>
-                <p>Dont got a user? Sign up now!</p>
-                <a class="btn btn-outline-info" href="{{ url_for('register') }}">Sign-Up</a>
+                <a class="btn btn-outline-info" href="{{ url_for('register') }}">הרשם</a>
             </div>
         </form>
     </div>
