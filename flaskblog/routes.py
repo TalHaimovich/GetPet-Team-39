@@ -175,7 +175,7 @@ def send_pet_coin():
     return redirect(request.referrer)
 
 
-@app.route("/homelogged", methods=['GET', 'POST'])
+@app.route("/home_in", methods=['GET', 'POST'])
 @login_required
 def homelogged():
     create_post_form = PostForm()
