@@ -8,11 +8,16 @@ from flask_login import current_user
 
 class RegistrationForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired(), Length(min=2, max=20)])
+<<<<<<< HEAD
     password = PasswordField('Password', validators=[DataRequired(),Length(min=2,max=20)])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+=======
+    password = PasswordField('Password', validators=[DataRequired(),Length(min=5, max=20)])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(),Length(min=5, max=20), EqualTo('password')])
+>>>>>>> 46ee63217dd2e603b530e90f5672f957633b0708
     email = StringField('Email', validators=[DataRequired(), Email()])
     image = FileField('image', validators=[
-        FileAllowed(['jpg', 'png'], 'Images only!')
+        FileAllowed(['jpg', 'png','jfif'], 'Images only!')
     ])
     submit = SubmitField('Sign Up')
 
@@ -23,7 +28,7 @@ class RegistrationForm(FlaskForm):
 
 
 class AsosRegistrationForm(RegistrationForm):
-    name = StringField('שם העמותה', validators=[DataRequired(), Length(min=2, max=20)])
+    name = StringField('Association Name', validators=[DataRequired(), Length(min=2, max=20)])
     address = StringField('Address', validators=[DataRequired(), Length(min=2, max=20)])
 
     def validate_address(self, address):
@@ -33,7 +38,7 @@ class AsosRegistrationForm(RegistrationForm):
 
 
 class BusRegistrationForm(RegistrationForm):
-    name = StringField('שם העסק', validators=[DataRequired(), Length(min=2, max=20)])
+    name = StringField('Business name', validators=[DataRequired(), Length(min=2, max=20)])
     bus_id = IntegerField('bus id', validators=[DataRequired()])
 
     def validate_bus_id(self, bus_id):
@@ -54,7 +59,7 @@ class UpdateAccountForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
     image = FileField('image', validators=[
-        FileAllowed(['jpg', 'png'], 'Images only!')
+        FileAllowed(['jpg', 'png','jfif'], 'Images only!')
     ])
     submit = SubmitField('Update')
 
@@ -75,7 +80,7 @@ class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(min=2, max=20)])
     content = TextAreaField('Content', validators=[DataRequired(), Length(min=2, max=1000)])
     image = FileField('image', validators=[
-        FileAllowed(['jpg', 'png'], 'Images only!')
+        FileAllowed(['jpg', 'png','jfif'], 'Images only!')
     ])
     type = SelectField('Type',  validators=[DataRequired()], choices=['adopt', 'foster', 'product', 'discount',
                                                                       'events', 'tips', 'update'])
