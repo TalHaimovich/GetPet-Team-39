@@ -2,19 +2,18 @@
 {% block content %}
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item active" aria-current="page">Join our comunity!</li>
+      <li class="breadcrumb-item active" aria-current="page">Join our community today</li>
     </ol>
   </nav>
     <div class="content-section">
         <form method="POST" action="">
-            <legend class="border-bottom mb-4">The place to get pets</legend>
+            <legend class="border-bottom mb-4">Want pet ?! come to here</legend>
+            <p>Login</p>
             <br>
-            <p>Please login to continue </p>
             <div class="form-group">
                 <a class="btn btn-outline-info" href="{{ url_for('login') }}">Login</a>
                 <br>
                 <br>
-                <p>Done have a user? join us now! </p>
                 <a class="btn btn-outline-info" href="{{ url_for('register') }}">Register</a>
             </div>
         </form>
