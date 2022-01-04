@@ -56,3 +56,17 @@ class PostTests(BaseTestCase):
         response = self.client.post('/delete_post/'+str(post.id), headers={"Referer": '/home_in'})
         self.assertRedirects(response, '/home_in')
         self.assertEqual(Post.query.count(), 0)
+
+
+    def test_new_event_post(self):
+        new_events=Post(id=480,user_id=66089,title="Testing-test",content="Post-post",date_posted='April 21, 2018',is_events=True)
+        assert new_events.id==480,"should be equal"
+        assert new_events.user_id==66089,"should be equal"
+        assert new_events.title=="Testing-test","should be equal"
+        assert new_events.content=="Post-post", "should be equal"
+        assert new_events.date_posted=='April 21, 2018'
+        assert new_events.id != 1234, "should not be equal"
+        assert new_events.user_id!=12212, "should not be equal"
+        assert new_events.is_foster!=True, "should not be equal"
+        assert new_events.is_events==True ,"should  be equal"
+        assert new_events.is_adopt!=True, "should not be equal"  #check the flag that indicate of events post 
