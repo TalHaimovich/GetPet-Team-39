@@ -70,3 +70,17 @@ class PostTests(BaseTestCase):
         assert new_events.is_foster!=True, "should not be equal"
         assert new_events.is_events==True ,"should  be equal"
         assert new_events.is_adopt!=True, "should not be equal"  #check the flag that indicate of events post 
+
+    def test_new_tips_post(self):
+        new_tip=Post(id=490,user_id=66289,title="Testing-test",content="Post-post",date_posted='April 21, 2018',is_tips=True)
+        assert new_tip.id==490,"should be equal"
+        assert new_tip.user_id==66289,"should be equal"
+        assert new_tip.title=="Testing-test","should be equal"
+        assert new_tip.content=="Post-post", "should be equal"
+        assert new_tip.date_posted=='April 21, 2018'
+        assert new_tip.id != 1234, "should not be equal"
+        assert new_tip.user_id!=12212, "should not be equal"
+        assert new_tip.is_foster!=True, "should not be equal"
+        assert new_tip.is_events!=True ,"should not be equal"
+        assert new_tip.is_adopt!=True, "should not be equal" 
+        assert new_tip.is_tips== True, "should be equal" #check the flag that indicate of tips post 
