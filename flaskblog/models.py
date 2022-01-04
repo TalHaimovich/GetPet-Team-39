@@ -20,7 +20,6 @@ class User(db.Model, UserMixin):
     is_asos = db.Column(db.Boolean, default=False, nullable=False)  # true if user is asos user
     is_admin = db.Column(db.Boolean, default=False, nullable=False)  # true if user is admin user
     pet_coin = db.Column(db.Integer, default=50, nullable=False)
-    pet_coin_capacity = db.Column(db.Integer, default=200, nullable=False)
 
     posts = db.relationship('Post', backref='user')
     posts_reports = db.relationship('PostReport', backref='user')

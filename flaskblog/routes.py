@@ -154,13 +154,17 @@ def send_pet_coin():
                 flash('You can not send pet coins', 'danger')
                 return redirect(request.referrer)
 
+            if form.amount.data <= 0:
+                flash('Amount must be greater then 0', 'danger')
+                return redirect(request.referrer)
+
             if current_user.is_asos:
                 user.pet_coin += form.amount.data
                 db.session.commit()
                 flash('Transaction completed', 'success')
                 return redirect(request.referrer)
             else:
-                if current_user.pet_coin_capacity >= form.amount.data:
+                if current_user.pet_coin >= form.amount.data:
                     user.pet_coin += form.amount.data
                     current_user.pet_coin -= form.amount.data
                     db.session.commit()
@@ -212,7 +216,6 @@ def reports():
             user_dict['amount_reported'] += PostReport.query.filter_by(post_id=post.id).count()
 
         users.append(user_dict)
-
 
     return render_template(
         'reports.html',

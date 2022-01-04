@@ -37,6 +37,11 @@ class BaseTestCase(TestCase):
         response = self.client.post("/login", data={'email': email, 'password': password})
         self.assertRedirects(response, '/home_in')
 
+    def creat_test_post(self,title,user_id,content):
+        post = Post(title=title, user_id=user_id, content=content)
+        db.session.add(post)
+        db.session.commit()
+        return post
 
 # def test_assert_mytemplate_used(self):
 #     response = self.client.get("/registeruser")
