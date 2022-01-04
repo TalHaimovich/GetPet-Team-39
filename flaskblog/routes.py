@@ -135,7 +135,7 @@ def logout():
     return redirect(url_for('home'))
 
 
-@app.route("/sendpetcoin", methods=['POST'])
+@app.route("/send_pet_coin", methods=['POST'])
 @login_required
 def send_pet_coin():
     form = SendPetCoinForm()
@@ -162,7 +162,7 @@ def send_pet_coin():
             else:
                 if current_user.pet_coin_capacity >= form.amount.data:
                     user.pet_coin += form.amount.data
-                    current_user.pet_coin_capacity -= form.amount.data
+                    current_user.pet_coin -= form.amount.data
                     db.session.commit()
                     flash('Transaction completed', 'success')
                 else:
@@ -219,8 +219,8 @@ def reports():
         title='Reports',
         users=users,
         amount_posts=Post.query.count(),
-        amount_users=User.query.count(),
-        amount_pet_coint=db.session.query(func.sum(User.pet_coin)).filter(User.is_bus == False, User.is_asos == False)[0][0],
+        amount_users=User.query.count()-1,
+        amount_pet_coint=db.session.query(func.sum(User.pet_coin)-50).filter(User.is_bus == False, User.is_asos == False)[0][0],
         regular=User.query.filter_by(is_bus=False, is_asos=False),
         buisnesses=User.query.filter_by(is_bus=True),
         asos=User.query.filter_by(is_asos=True)
