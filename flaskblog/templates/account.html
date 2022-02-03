@@ -1,0 +1,113 @@
+{% extends "layout.html" %}
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active" aria-current="page">Here you can change your profile</li>
+    </ol>
+  </nav>
+<div class="content-section">
+    <div class="media">
+        <img class="rounded-circle account-img" src="uploads/{{ current_user.image }}" alt="" width="200px" />
+        <div class="media-body">
+            <h2 class="account-heading">{{ current_user.name }}</h2>
+            <p class="text-secondery">{{ current_user.email }}</p>
+        </div>
+
+    </div>
+    <legend class="border-bottom mb-4"></legend>
+    {% if not (current_user.is_bus or current_user.is_asos) %}
+    <div class="alert alert-warning" role="alert">
+        PetCoin: {{ current_user.pet_coin }}
+      </div></p>
+      {% endif %}
+
+      <br>
+    <legend class="border-bottom mb-4">Account Info</legend>
+
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createPostModal">
+        Update Profile
+    </button>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createModalLabel">Update Profile</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+                        <fieldset class="form-group">
+                            <div class="form-group">
+                                {{ form.name.label(class="form-control-label") }}
+                                {% if form.name.errors %}
+                                {{ form.name(class="form-control form-control-lg is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.name.errors %}
+                                    <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {{ form.name(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.email.label(class="form-control-label") }}
+                                {% if form.email.errors %}
+                                {{ form.email(class="form-control form-control-lg is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.email.errors %}
+                                    <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {{ form.email(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.image.label(class="form-control-label") }}
+                                {% if form.image.errors %}
+                                {{ form.image(class="form-control form-control-lg is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.image.errors %}
+                                    <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {{ form.image(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                        </fieldset>
+                        <div class="form-group">
+                            {{ form.submit(class="btn btn-outline-info") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    
+        
+    <div class="tab-content" id="pills-tabContent">
+        <br>
+        <legend class="border-bottom mb-4">Your posts</legend>
+        <div class="tab-pane fade show active" id="all-posts" role="tabpanel" aria-labelledby="all-posts-tab">
+            <div class="row">
+                {% for post in all_posts %}
+                {% with post=post %}
+                    {% include 'ad_card.html' %}
+                {% endwith %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {% endblock content %}
